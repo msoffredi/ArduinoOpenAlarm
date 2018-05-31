@@ -40,6 +40,11 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_ARM);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_DISARM))
+        {
+            commandObj.setCommand(ALARM_COMMAND_DISARM);
+            this->extractParameters(serialInput, &commandObj);
+        }
         else if (command == F(USB_ALARM_COMMAND_ENTER_ADMIN_MODE))
         {
             commandObj.setCommand(ALARM_COMMAND_ENTER_ADMIN_MODE);

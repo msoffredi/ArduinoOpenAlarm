@@ -331,8 +331,12 @@ void DisarmedMode::arm(AlarmCommand* commandObj)
     String code = commandObj->getParameter(1);
     
     // TODO: add verification all sensors are inactive
-    if (code.toInt() == this->userCode)
+    if (code.toInt() == this->userCode && this->alarm->getStatus() == ALARM_STATUS_DISARMED)
     {
         this->alarm->setStatus(ALARM_STATUS_ARMED);
+        
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_ARMED)))
+                );
     }
 }

@@ -21,7 +21,7 @@ private:
     Alarm* alarm;
     CommandPreprocessor* commandPreprocessor;
     OutputProcessor* outProcessor;
-    uint8_t userCode;
+    uint16_t userCode;
 
     void processCommand(AlarmCommand command);
     void disarm(AlarmCommand* commandObj);

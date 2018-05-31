@@ -22,7 +22,7 @@ void ArmedMode::processCommand(AlarmCommand commandObj)
 {
     uint8_t command = commandObj.getCommand();
     
-    if (command == ALARM_COMMAND_ARM)
+    if (command == ALARM_COMMAND_DISARM)
     {
         this->disarm(&commandObj);
     }
@@ -32,9 +32,12 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
 {
     String code = commandObj->getParameter(1);
     
-    // TODO: add verification all sensors are inactive
-    if (code.toInt() == this->userCode)
+    if (code.toInt() == this->userCode && this->alarm->getStatus() == ALARM_STATUS_ARMED)
     {
         this->alarm->setStatus(ALARM_STATUS_DISARMED);
+        
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
+                );
     }
 }

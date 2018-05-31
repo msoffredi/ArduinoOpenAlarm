@@ -21,6 +21,8 @@
 #define TEXT_LIST_SENSORS_NO_SENSORS "No sensors found"
 
 #define TEXT_ALARM_STATUS "Alarm status: "
+#define TEXT_ALARM_ARMED "Alarm armed"
+#define TEXT_ALARM_DISARMED "Alarm disarmed"
 
 #define TEXT_SENSOR_ADDED "Sensor added. Sensor #"
 #define TEXT_SENSOR_ADDED_PIN ", attached to pin "
