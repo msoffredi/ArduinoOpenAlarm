@@ -116,10 +116,11 @@ void DisarmedMode::listSensors()
 
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + x 
-                        + ((sensor->isWireless()) ? (String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID()) : "")
-                        + ((sensor->isTwoStates()) ? (String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID()) : "")
+                        + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
+                        + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")
                         + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
                         + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
+                        + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
                         )
                     );
         }
