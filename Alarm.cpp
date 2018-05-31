@@ -100,3 +100,8 @@ uint8_t Alarm::getOperationMode()
 {
     return this->operationMode;
 }
+
+void Alarm::setOperationMode(uint8_t operationMode)
+{
+    this->operationMode = operationMode;
+}

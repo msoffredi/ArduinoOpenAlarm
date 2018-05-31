@@ -19,6 +19,8 @@
 #define USB_ALARM_COMMAND_LIST_SENSORS "listsensors"
 #define USB_ALARM_COMMAND_STATUS "status"
 #define USB_ALARM_COMMAND_ARM "arm"
+#define USB_ALARM_COMMAND_ENTER_ADMIN_MODE "admin"
+#define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "exitadmin"
 
 // Format is: adds <pin>
 #define USB_ALARM_COMMAND_ADD_SENSOR "adds"

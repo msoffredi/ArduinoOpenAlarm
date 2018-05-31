@@ -25,6 +25,9 @@
 #define TEXT_SENSOR_ADDED "Sensor added. Sensor #: "
 #define TEXT_SENSOR_ADDED_PIN ", attached to pin "
 
+#define TEXT_ENTER_ADMIN_MODE "Admin mode on"
+#define TEXT_EXIT_ADMIN_MODE "No longer in admin mode"
+
 // Wireless RF texts 
 #define TEXT_WIRELESS_LEARNING "Wireless learning mode activated. Waiting for new sensor to transmit..."
 #define TEXT_WIRELESS_LEARNING2_1 "Wireless 2 states learning mode activated. Waiting for new sensor to transmit state 1..."

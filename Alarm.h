@@ -37,6 +37,7 @@ public:
     Sensor* getSensor(uint8_t sensorIdx);
     void loop();
     uint8_t getOperationMode();
+    void setOperationMode(uint8_t operationMode);
     
 };
 
