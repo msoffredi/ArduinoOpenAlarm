@@ -22,6 +22,7 @@ private:
     CommandPreprocessor* commandPreprocessor;
     OutputProcessor* outProcessor;
     uint16_t userCode;
+    bool bellTriggered;
 
     void processCommand(AlarmCommand command);
     void disarm(AlarmCommand* commandObj);

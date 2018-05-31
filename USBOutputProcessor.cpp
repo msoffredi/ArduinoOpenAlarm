@@ -9,6 +9,7 @@ void USBOutputProcessor::processOutput(AlarmOutput outputObj)
         case ALARM_OUTPUT_STATUS:
         case ALARM_OUTPUT_ARM:
         case ALARM_OUTPUT_DISARM:
+        case ALARM_OUTPUT_BELL:
         case ALARM_OUTPUT_TEXT:
             Serial.println(outputObj.getOutputText());
             break;            

@@ -27,6 +27,10 @@ private:
     uint8_t numSensors;
     uint8_t status;
     uint8_t operationMode;
+    bool bell;
+    
+    bool checkWiredSensorsActive();
+    bool checkWirelessSensorsActive();
     
 public:
     Alarm();
@@ -39,6 +43,8 @@ public:
     void loop();
     uint8_t getOperationMode();
     void setOperationMode(uint8_t operationMode);
+    void setBell(bool bell);
+    bool getBell();
     
 };
 
