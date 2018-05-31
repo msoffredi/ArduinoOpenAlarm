@@ -27,7 +27,6 @@ private:
     uint8_t numSensors;
     uint8_t status;
     uint8_t operationMode;
-    bool hasWirelessSensors;
     
 public:
     Alarm();
