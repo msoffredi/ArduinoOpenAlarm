@@ -50,6 +50,11 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_EXIT_ADMIN_MODE);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_DEL_SENSOR))
+        {
+            commandObj.setCommand(ALARM_COMMAND_DEL_SENSOR);
+            this->extractParameters(serialInput, &commandObj);
+        }
     }
     
     this->lastCommand = commandObj;

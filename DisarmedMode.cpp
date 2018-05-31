@@ -43,7 +43,14 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
     
     if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
     {
-        if (command == ALARM_COMMAND_WIRELESS_LEARN) 
+        if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
+        {
+            this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
+                    );
+        }
+        else if (command == ALARM_COMMAND_WIRELESS_LEARN) 
         {
             this->learnNewWirelessDevice();
         }
@@ -59,12 +66,9 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->addSensor(&commandObj);
         }
-        else if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
+        else if (command == ALARM_COMMAND_DEL_SENSOR)
         {
-            this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
-                    );
+            this->delSensor(&commandObj);
         }
         else if (command == ALARM_COMMAND_VERSION) 
         {
@@ -305,6 +309,20 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
                 );
         
         pinMode(pin.toInt(), INPUT_PULLUP);
+    }
+}
+
+void DisarmedMode::delSensor(AlarmCommand* commandObj)
+{
+    uint8_t idx = commandObj->getParameter(1).toInt();
+    
+    if (idx > 0 && idx <= this->alarm->getNumSensors())
+    {
+        this->alarm->delSensor(idx);
+
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_DELETED)) + idx)
+                );
     }
 }
 

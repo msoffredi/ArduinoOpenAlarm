@@ -22,8 +22,9 @@
 
 #define TEXT_ALARM_STATUS "Alarm status: "
 
-#define TEXT_SENSOR_ADDED "Sensor added. Sensor #: "
+#define TEXT_SENSOR_ADDED "Sensor added. Sensor #"
 #define TEXT_SENSOR_ADDED_PIN ", attached to pin "
+#define TEXT_SENSOR_DELETED "Deleted sensor #"
 
 #define TEXT_ENTER_ADMIN_MODE "Admin mode on"
 #define TEXT_EXIT_ADMIN_MODE "No longer in admin mode"

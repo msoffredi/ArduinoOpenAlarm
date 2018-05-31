@@ -31,6 +31,7 @@ private:
 public:
     Alarm();
     uint8_t addSensor(Sensor sensorPtr);
+    void delSensor(uint8_t index);
     uint8_t getStatus();
     void setStatus(uint8_t status);
     uint8_t getNumSensors();
