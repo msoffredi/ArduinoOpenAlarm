@@ -1,0 +1,293 @@
+#include "DisarmedMode.h"
+
+DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP)
+{
+    this->userCode = DEFAULT_USER_CODE;
+    this->adminCode = DEFAULT_ADMIN_CODE;
+    this->alarm = alarm;
+    this->commandPreprocessor = commPP;
+    this->outProcessor = outP;
+}
+
+void DisarmedMode::loop()
+{
+    AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
+    
+    if (commandObj.getCommand() != ALARM_COMMAND_NONE)
+    {
+        this->processCommand(commandObj);
+    }
+
+    // Alarm status
+    //this->processAlarmStatus();
+}
+
+void DisarmedMode::processAlarmStatus()
+{
+    if (this->alarm->getNumSensors())
+    {
+        String statuses = "";
+        
+        for (int x=1; x<=this->alarm->getNumSensors(); x++)
+        {
+            statuses += (this->alarm->getSensor(x)->isActive()) ? "1" : "0"; 
+        }
+        
+        this->outProcessor->processAlarmStatus(statuses);
+    }
+}
+
+void DisarmedMode::processCommand(AlarmCommand commandObj)
+{
+    uint8_t command = commandObj.getCommand();
+    
+    if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
+    {
+        if (command == ALARM_COMMAND_VERSION) 
+        {
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
+                    );
+        }
+        else if (command == ALARM_COMMAND_WIRELESS_LEARN) 
+        {
+            this->learnNewWirelessDevice();
+        }
+        else if (command == ALARM_COMMAND_WIRELESS_LEARN_2S) 
+        {
+            this->learnNewTwoStatesWirelessDevice();
+        }
+        else if (command == ALARM_COMMAND_LIST_SENSORS)
+        {
+            this->listSensors();
+        }
+        else if (command == ALARM_COMMAND_ADD_SENSOR)
+        {
+            this->addSensor(&commandObj);
+        }
+        else if (command == ALARM_COMMAND_ARM)
+        {
+            this->arm(&commandObj);
+        }
+    }
+    else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
+    {
+        if (command == ALARM_COMMAND_ALARM_STATUS)
+        {
+            this->processAlarmStatus();
+        }
+    }
+}
+
+void DisarmedMode::listSensors()
+{
+    Sensor* sensor;
+    uint8_t numSensors = this->alarm->getNumSensors();
+            
+    if (numSensors)
+    {
+        for (int x=1; x<=numSensors; x++)
+        {
+            sensor = this->alarm->getSensor(x);
+
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + x 
+                        + ((sensor->isWireless()) ? (String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID()) : "")
+                        + ((sensor->isTwoStates()) ? (String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID()) : "")
+                        + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
+                        + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
+                        )
+                    );
+        }
+    }
+    else
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_NO_SENSORS)))
+                );
+    }
+}
+
+void DisarmedMode::learnNewWirelessDevice()
+{
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING)))
+            );
+
+    WirelessRF wRFObj;
+    String newID = wRFObj.getNewRFDeviceRead();
+    Sensor sensor;
+    uint8_t sensorNumber = 0;
+    
+    if (newID != "")
+    {
+        if (!this->sensorExistsInAlarm(newID))
+        {
+            sensor.setSensorID(newID);
+            sensor.setPower(true);
+            sensor.setWireless(true);
+
+            sensorNumber = this->alarm->addSensor(sensor);
+
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_ADDED)) 
+                        + String(sensorNumber)
+                        + F(TEXT_LIST_SENSORS_ID) + newID
+                        )
+                    );
+        }
+        else
+        {
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
+                    );
+        }
+    }
+    else
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
+                );
+    }
+}
+
+void DisarmedMode::learnNewTwoStatesWirelessDevice()
+{
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_1)))
+            );
+
+    WirelessRF wRFObj;
+    String stateOneID, newID = wRFObj.getNewRFDeviceRead();
+    Sensor sensor;
+    uint8_t sensorNumber = 0;
+    
+    if (newID != "")
+    {
+        if (!this->sensorExistsInAlarm(newID))
+        {
+            sensor.setSensorID(newID);
+            stateOneID = newID;
+            sensor.setPower(true);
+            sensor.setWireless(true);
+            sensor.setTwoStates(true);
+
+            delay(3000);
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_2)))
+                    );
+
+            newID = wRFObj.getNewRFDeviceRead();
+            
+            if (newID != "")
+            {
+                if (!this->sensorExistsInAlarm(newID))
+                {
+                    sensor.setSensorInactiveID(newID);
+                    
+                    delay(3000);
+                    this->outProcessor->processOutput(
+                            AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_3)))
+                            );
+
+                    newID = wRFObj.getNewRFDeviceRead();
+                    
+                    if (newID == stateOneID)
+                    {
+                        sensorNumber = this->alarm->addSensor(sensor);
+
+                        this->outProcessor->processOutput(
+                                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_ADDED)) 
+                                    + String(sensorNumber)
+                                    + F(TEXT_LIST_SENSORS_ID) + newID
+                                    + F(TEXT_LIST_SENSORS_S2_ID) + sensor.getSensorInactiveID()
+                                    )
+                                );
+                    }
+                    else
+                    {
+                        this->outProcessor->processOutput(
+                                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_S1_FAIL)))
+                                );
+                    }
+                }
+                else
+                {
+                    this->outProcessor->processOutput(
+                            AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
+                            );
+                }
+            }
+            else
+            {
+                this->outProcessor->processOutput(
+                        AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
+                        );
+            }            
+        }
+        else
+        {
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
+                    );
+        }
+    }
+    else
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
+                );
+    }
+}
+
+uint8_t DisarmedMode::sensorExistsInAlarm(String sensorID)
+{
+    bool returnValue = 0;
+    Sensor* sensor;
+    
+    for (int x=1; x<=this->alarm->getNumSensors(); x++)
+    {
+        sensor = this->alarm->getSensor(x);
+        
+        if (sensor->getSensorID() == sensorID)
+        {
+            returnValue = x;
+            break;
+        }
+    }
+        
+    return returnValue;
+}
+
+void DisarmedMode::addSensor(AlarmCommand* commandObj)
+{
+    String pin = commandObj->getParameter(1);
+    Sensor sensor;
+    uint8_t sensorNumber = 0;
+    
+    if (pin.toInt() >= 0 && pin.toInt() < NUM_DIGITAL_PINS)
+    {
+        sensor.setPower(true);
+        sensor.setSensorPin(pin.toInt());
+        
+        sensorNumber = this->alarm->addSensor(sensor);
+
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_ADDED)) 
+                    + String(sensorNumber)
+                    + F(TEXT_SENSOR_ADDED_PIN) + pin.toInt()
+                    )
+                );
+    }
+}
+
+void DisarmedMode::arm(AlarmCommand* commandObj)
+{
+    String code = commandObj->getParameter(1);
+    
+    // TODO: add verification all sensors are inactive
+    if (code.toInt() == this->userCode)
+    {
+        this->alarm->setStatus(ALARM_STATUS_ARMED);
+    }
+}
