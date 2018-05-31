@@ -27,7 +27,6 @@ private:
     uint8_t numSensors;
     uint8_t status;
     uint8_t operationMode;
-    bool hasWirelessSensors;
     
 public:
     Alarm();
@@ -38,6 +37,7 @@ public:
     Sensor* getSensor(uint8_t sensorIdx);
     void loop();
     uint8_t getOperationMode();
+    void setOperationMode(uint8_t operationMode);
     
 };
 

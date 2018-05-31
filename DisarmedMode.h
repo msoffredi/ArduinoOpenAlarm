@@ -22,8 +22,8 @@ private:
     Alarm* alarm;
     CommandPreprocessor* commandPreprocessor;
     OutputProcessor* outProcessor;
-    uint8_t userCode;
-    uint8_t adminCode;
+    uint16_t userCode;
+    uint16_t adminCode;
             
     void processCommand(AlarmCommand command);
     void listSensors();
@@ -33,6 +33,7 @@ private:
     void processAlarmStatus();
     void addSensor(AlarmCommand* commandObj);
     void arm(AlarmCommand* commandObj);
+    void enterAdminMode(AlarmCommand* commandObj);
     
 public:
     DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP);
