@@ -302,6 +302,8 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
                     + F(TEXT_SENSOR_ADDED_PIN) + pin.toInt()
                     )
                 );
+        
+        pinMode(pin.toInt(), INPUT_PULLUP);
     }
 }
 
