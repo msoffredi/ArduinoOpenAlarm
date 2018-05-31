@@ -1,9 +1,23 @@
-# AH_AT24C_
-General library for the EEPROM(s) Atmel AT24C32/64
+# Arduino Open Alarm
+Open Source Arduino based Alarm. 
 
-This library is for reading and writing to AT24C32 & AT24C64 EEPROM memories
-from Atmel.
+Project start date: May 12, 2018
+Project related email: aoa@arduinohobby.com
+Project founder: Marcelo Soffredi
 
-Datasheet can be found at: http://www.atmel.com/images/doc0336.pdf
+This project requires RCSwitch library and can be found here: [https://github.com/sui77/rc-switch/archive/master.zip](https://github.com/sui77/rc-switch/archive/master.zip)
 
-This library requires Wire.h from Arduino project.
+## Roadmap
+
+- 
+
+## Features list for next versions
+
+- Bluetooth enabled for Mobile control
+- WiFi enabled for monitoring and remote control over Internet
+- Other languages supported
+
+## Potential features 
+
+- Ethernet enabled?
+- Compatibility with commercial alarm parts (keypads, sensors, remotes, etc.)
