@@ -56,15 +56,15 @@ void Alarm::loop()
     // We check wired sensors first
     for (int x=1; x<=this->numSensors; x++)
     {
-        if (!(sensors[x-1].isWireless()))
+        if (!(this->sensors[x-1].isWireless()))
         {
-            if (digitalRead(sensors[x-1].getSensorPin()))
+            if (digitalRead(this->sensors[x-1].getSensorPin()))
             {
-                sensors[x-1].setActive(true);
+                this->sensors[x-1].setActive(true);
             }
             else
             {
-                sensors[x-1].setActive(false);
+                this->sensors[x-1].setActive(false);
             }
         }
     }
@@ -78,16 +78,16 @@ void Alarm::loop()
         {
             for (int x=1; x<=this->numSensors; x++)
             {
-                if (sensors[x-1].isWireless() 
-                    && sensors[x-1].getSensorID() == ID)
+                if (this->sensors[x-1].isWireless() 
+                    && this->sensors[x-1].getSensorID() == ID)
                 {
-                    sensors[x-1].setActive(true);
+                    this->sensors[x-1].setActive(true);
                     break;
                 }
-                else if (sensors[x-1].isWireless() 
-                    && sensors[x-1].getSensorInactiveID() == ID)
+                else if (this->sensors[x-1].isWireless() 
+                    && this->sensors[x-1].getSensorInactiveID() == ID)
                 {
-                    sensors[x-1].setActive(false);
+                    this->sensors[x-1].setActive(false);
                     break;
                 }
             }
@@ -104,4 +104,17 @@ uint8_t Alarm::getOperationMode()
 void Alarm::setOperationMode(uint8_t operationMode)
 {
     this->operationMode = operationMode;
+}
+
+void Alarm::delSensor(uint8_t index)
+{
+    if (index < this->numSensors)
+    {
+        for (int x=index-1; x<(this->numSensors-1); x++)
+        {
+            this->sensors[x] = this->sensors[x+1];
+        }
+    }
+    
+    this->numSensors--;
 }

@@ -16,14 +16,19 @@
 #define USB_ALARM_COMMAND_VERSION "ver"
 
 // Alarm related commands
-#define USB_ALARM_COMMAND_LIST_SENSORS "listsensors"
+#define USB_ALARM_COMMAND_LIST_SENSORS "lists"
 #define USB_ALARM_COMMAND_STATUS "status"
 #define USB_ALARM_COMMAND_ARM "arm"
+#define USB_ALARM_COMMAND_DISARM "disarm"
 #define USB_ALARM_COMMAND_ENTER_ADMIN_MODE "admin"
-#define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "exitadmin"
+#define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "exit"
 
-// Format is: adds <pin>
+// Syntax: adds <pin>
 #define USB_ALARM_COMMAND_ADD_SENSOR "adds"
+
+// Syntax: dels <sensorID>
+// sensorID can be obtained by listing sensors with lists
+#define USB_ALARM_COMMAND_DEL_SENSOR "dels"
 
 // Wireless related commands
 #define USB_ALARM_COMMAND_WIRELESS_LEARN "wlearn"

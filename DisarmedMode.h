@@ -32,6 +32,7 @@ private:
     uint8_t sensorExistsInAlarm(String sensorID);
     void processAlarmStatus();
     void addSensor(AlarmCommand* commandObj);
+    void delSensor(AlarmCommand* commandObj);
     void arm(AlarmCommand* commandObj);
     void enterAdminMode(AlarmCommand* commandObj);
     

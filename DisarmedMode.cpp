@@ -43,7 +43,14 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
     
     if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
     {
-        if (command == ALARM_COMMAND_WIRELESS_LEARN) 
+        if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
+        {
+            this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
+                    );
+        }
+        else if (command == ALARM_COMMAND_WIRELESS_LEARN) 
         {
             this->learnNewWirelessDevice();
         }
@@ -59,12 +66,9 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->addSensor(&commandObj);
         }
-        else if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
+        else if (command == ALARM_COMMAND_DEL_SENSOR)
         {
-            this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
-                    );
+            this->delSensor(&commandObj);
         }
         else if (command == ALARM_COMMAND_VERSION) 
         {
@@ -116,10 +120,11 @@ void DisarmedMode::listSensors()
 
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + x 
-                        + ((sensor->isWireless()) ? (String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID()) : "")
-                        + ((sensor->isTwoStates()) ? (String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID()) : "")
+                        + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
+                        + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")
                         + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
                         + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
+                        + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
                         )
                     );
         }
@@ -307,13 +312,31 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
     }
 }
 
+void DisarmedMode::delSensor(AlarmCommand* commandObj)
+{
+    uint8_t idx = commandObj->getParameter(1).toInt();
+    
+    if (idx > 0 && idx <= this->alarm->getNumSensors())
+    {
+        this->alarm->delSensor(idx);
+
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_DELETED)) + idx)
+                );
+    }
+}
+
 void DisarmedMode::arm(AlarmCommand* commandObj)
 {
     String code = commandObj->getParameter(1);
     
     // TODO: add verification all sensors are inactive
-    if (code.toInt() == this->userCode)
+    if (code.toInt() == this->userCode && this->alarm->getStatus() == ALARM_STATUS_DISARMED)
     {
         this->alarm->setStatus(ALARM_STATUS_ARMED);
+        
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_ARMED)))
+                );
     }
 }
