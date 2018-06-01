@@ -41,6 +41,7 @@ private:
     void initUserAndAdminCodes();
     void writeToEEPROM();
     void changeUserCode(AlarmCommand* commandObj);
+    void changeAdminCode(AlarmCommand* commandObj);
     
 public:
     DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);

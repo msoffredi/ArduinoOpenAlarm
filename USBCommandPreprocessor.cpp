@@ -65,6 +65,11 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_CHANGE_USER_CODE);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_CHANGE_ADMIN_CODE))
+        {
+            commandObj.setCommand(ALARM_COMMAND_CHANGE_ADMIN_CODE);
+            this->extractParameters(serialInput, &commandObj);
+        }
     }
     
     this->lastCommand = commandObj;

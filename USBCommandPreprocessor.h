@@ -31,6 +31,7 @@
 #define USB_ALARM_COMMAND_DEL_SENSOR "dels"
 
 #define USB_ALARM_COMMAND_CHANGE_USER_CODE "ucode"
+#define USB_ALARM_COMMAND_CHANGE_ADMIN_CODE "acode"
 
 // Wireless related commands
 #define USB_ALARM_COMMAND_WIRELESS_LEARN "wlearn"
