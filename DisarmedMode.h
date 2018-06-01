@@ -15,6 +15,7 @@
 #include "CommandPreprocessor.h"
 #include "OutputProcessor.h"
 #include "Language.h"
+#include "EEPROMHandler.h"
 
 class DisarmedMode
 {
@@ -24,6 +25,7 @@ private:
     OutputProcessor* outProcessor;
     uint16_t userCode;
     uint16_t adminCode;
+    EEPROMHandler* eeprom;
             
     void processCommand(AlarmCommand command);
     void listSensors();
@@ -36,9 +38,11 @@ private:
     void arm(AlarmCommand* commandObj);
     void enterAdminMode(AlarmCommand* commandObj);
     bool pinNotInBlacklist(uint8_t pin);
+    void initUserAndAdminCodes();
+    void writeToEEPROM();
     
 public:
-    DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP);
+    DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
     void loop();
     
 };
