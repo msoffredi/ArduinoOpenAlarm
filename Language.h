@@ -35,6 +35,7 @@
 
 #define TEXT_ENTER_ADMIN_MODE "Admin mode on"
 #define TEXT_EXIT_ADMIN_MODE "No longer in admin mode"
+#define TEXT_ADMIN_USER_CODE_CHANGED "User code changed to "
 
 #define TEXT_LIST_SENSORS_ID ", ID "
 #define TEXT_LIST_SENSORS_S2_ID ", State 2 ID "

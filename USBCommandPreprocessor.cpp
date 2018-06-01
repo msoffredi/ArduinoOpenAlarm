@@ -60,6 +60,11 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_DEL_SENSOR);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_CHANGE_USER_CODE))
+        {
+            commandObj.setCommand(ALARM_COMMAND_CHANGE_USER_CODE);
+            this->extractParameters(serialInput, &commandObj);
+        }
     }
     
     this->lastCommand = commandObj;

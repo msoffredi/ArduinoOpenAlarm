@@ -99,6 +99,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
                     );
         }
+        else if (command == ALARM_COMMAND_CHANGE_USER_CODE) 
+        {
+            this->changeUserCode(&commandObj);
+        }
     }
     else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
     {
@@ -114,6 +118,21 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->enterAdminMode(&commandObj);
         }
+    }
+}
+
+void DisarmedMode::changeUserCode(AlarmCommand* commandObj)
+{
+    String code = commandObj->getParameter(1);
+    
+    if (code.toInt() >= 0 && code.toInt() < 10000)
+    {
+        this->userCode = code.toInt();
+        EEPROM.put(EEPROM_USER_CODE, this->userCode);
+        this->eeprom->setMessage(MESSAGE_READ_USER_CODE);
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_USER_CODE_CHANGED)) + code.toInt())
+                );
     }
 }
 
