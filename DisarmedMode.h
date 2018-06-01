@@ -35,6 +35,7 @@ private:
     void delSensor(AlarmCommand* commandObj);
     void arm(AlarmCommand* commandObj);
     void enterAdminMode(AlarmCommand* commandObj);
+    bool pinNotInBlacklist(uint8_t pin);
     
 public:
     DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP);

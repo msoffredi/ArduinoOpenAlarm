@@ -296,20 +296,54 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
     
     if (pin.toInt() >= 0 && pin.toInt() < NUM_DIGITAL_PINS)
     {
-        sensor.setPower(true);
-        sensor.setSensorPin(pin.toInt());
-        
-        sensorNumber = this->alarm->addSensor(sensor);
+        if (this->pinNotInBlacklist(pin.toInt()))
+        {
+            if (this->alarm->isFreePin(pin.toInt()))
+            {
+                sensor.setPower(true);
+                sensor.setSensorPin(pin.toInt());
 
-        this->outProcessor->processOutput(
-                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_ADDED)) 
-                    + String(sensorNumber)
-                    + F(TEXT_SENSOR_ADDED_PIN) + pin.toInt()
-                    )
-                );
-        
-        pinMode(pin.toInt(), INPUT_PULLUP);
+                sensorNumber = this->alarm->addSensor(sensor);
+
+                this->outProcessor->processOutput(
+                        AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_ADDED)) 
+                            + String(sensorNumber)
+                            + F(TEXT_SENSOR_ADDED_PIN) + pin.toInt()
+                            )
+                        );
+
+                pinMode(pin.toInt(), INPUT_PULLUP);
+            }
+            else
+            {
+                this->outProcessor->processOutput(
+                        AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_USED_PIN)))
+                        );
+            }
+        }
+        else
+        {
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_BLACKLIST)))
+                    );
+        }
     }
+}
+
+bool DisarmedMode::pinNotInBlacklist(uint8_t pin)
+{
+    bool notInBL = true;
+    
+    for (int x=0; x<sizeof(pinBlacklist); x++)
+    {
+        if (pinBlacklist[x] == pin)
+        {
+            notInBL = false;
+            break;
+        }
+    }
+    
+    return notInBL;
 }
 
 void DisarmedMode::delSensor(AlarmCommand* commandObj)

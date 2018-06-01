@@ -46,6 +46,7 @@ public:
     void setBell(bool bell);
     bool getBell();
     bool noSensorsActive();
+    bool isFreePin(uint8_t pin);
     
 };
 

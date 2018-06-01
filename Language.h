@@ -30,6 +30,8 @@
 #define TEXT_SENSOR_ADDED "Sensor added. Sensor #"
 #define TEXT_SENSOR_ADDED_PIN ", attached to pin "
 #define TEXT_SENSOR_DELETED "Deleted sensor #"
+#define TEXT_SENSOR_NOT_ADDED_BLACKLIST "Sensor not added. Pin in blacklist."
+#define TEXT_SENSOR_NOT_ADDED_USED_PIN "Sensor not added. Used pin."
 
 #define TEXT_ENTER_ADMIN_MODE "Admin mode on"
 #define TEXT_EXIT_ADMIN_MODE "No longer in admin mode"
