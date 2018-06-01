@@ -1,11 +1,33 @@
 #include "Alarm.h"
 
-Alarm::Alarm()
+Alarm::Alarm(EEPROMHandler* eeprom)
 {
     this->numSensors = 0;
     this->status = ALARM_STATUS_DISARMED;
     this->operationMode = ALARM_OPERATION_MODE_USER;
     this->bell = false;
+    this->eeprom = eeprom;
+    
+    this->initSensors();
+}
+
+void Alarm::initSensors()
+{
+    if (this->eeprom->isFirstTime())
+    {
+        this->writeToEEPROM();
+    }
+    else
+    {
+        EEPROM.get(EEPROM_NUMSENSORS_ADDR, this->numSensors);
+        EEPROM.get(EEPROM_SENSORS_ADDR, this->sensors);
+    }
+}
+
+void Alarm::writeToEEPROM()
+{
+    EEPROM.put(EEPROM_NUMSENSORS_ADDR, this->numSensors);
+    EEPROM.put(EEPROM_SENSORS_ADDR, this->sensors);
 }
 
 uint8_t Alarm::addSensor(Sensor sensor) 
@@ -14,6 +36,8 @@ uint8_t Alarm::addSensor(Sensor sensor)
     {
         sensors[this->numSensors] = sensor;
         this->numSensors++;
+        
+        this->writeToEEPROM();
         
         return this->numSensors;
     }
@@ -142,9 +166,11 @@ void Alarm::delSensor(uint8_t index)
         {
             this->sensors[x] = this->sensors[x+1];
         }
+        
+        this->numSensors--;
+        
+        this->writeToEEPROM();
     }
-    
-    this->numSensors--;
 }
 
 void Alarm::setBell(bool bell)

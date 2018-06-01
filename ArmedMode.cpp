@@ -1,11 +1,20 @@
 #include "ArmedMode.h"
 
-ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP)
+ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom)
 {
-    this->userCode = DEFAULT_USER_CODE;
     this->alarm = alarm;
     this->commandPreprocessor = commPP;
     this->outProcessor = outP;
+    this->eeprom = eeprom;
+    
+    if (this->eeprom->isFirstTime())
+    {
+        this->userCode = DEFAULT_USER_CODE;
+    }
+    else
+    {
+        EEPROM.get(EEPROM_USER_CODE, this->userCode);
+    }
 }
 
 void ArmedMode::loop()

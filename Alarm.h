@@ -10,6 +10,7 @@
 #endif
  
 #include "Sensor.h"
+#include "EEPROMHandler.h"
 #include "WirelessRF.h"
 
 #define MAX_SENSORS 10
@@ -28,12 +29,15 @@ private:
     uint8_t status;
     uint8_t operationMode;
     bool bell;
+    EEPROMHandler* eeprom;
     
     bool checkWiredSensorsActive();
     bool checkWirelessSensorsActive();
+    void initSensors();
+    void writeToEEPROM();
     
 public:
-    Alarm();
+    Alarm(EEPROMHandler* eeprom);
     uint8_t addSensor(Sensor sensorPtr);
     void delSensor(uint8_t index);
     uint8_t getStatus();

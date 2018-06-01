@@ -14,6 +14,7 @@
 #include "Alarm.h"
 #include "OutputProcessor.h"
 #include "Language.h"
+#include "EEPROMHandler.h"
 
 class ArmedMode
 {
@@ -23,12 +24,13 @@ private:
     OutputProcessor* outProcessor;
     uint16_t userCode;
     bool bellTriggered;
+    EEPROMHandler* eeprom;
 
     void processCommand(AlarmCommand command);
     void disarm(AlarmCommand* commandObj);
     
 public:
-    ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP);
+    ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
     void loop();
     
 };

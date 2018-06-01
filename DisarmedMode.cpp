@@ -1,12 +1,35 @@
 #include "DisarmedMode.h"
 
-DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP)
+DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom)
 {
-    this->userCode = DEFAULT_USER_CODE;
-    this->adminCode = DEFAULT_ADMIN_CODE;
     this->alarm = alarm;
     this->commandPreprocessor = commPP;
     this->outProcessor = outP;
+    this->eeprom = eeprom;
+    
+    this->initUserAndAdminCodes();
+}
+
+void DisarmedMode::initUserAndAdminCodes()
+{
+    if (this->eeprom->isFirstTime())
+    {
+        this->userCode = DEFAULT_USER_CODE;
+        this->adminCode = DEFAULT_ADMIN_CODE;
+        
+        this->writeToEEPROM();
+    }
+    else
+    {
+        EEPROM.get(EEPROM_USER_CODE, this->userCode);
+        EEPROM.get(EEPROM_ADMIN_CODE, this->adminCode);
+    }
+}
+
+void DisarmedMode::writeToEEPROM()
+{
+    EEPROM.put(EEPROM_USER_CODE, this->userCode);
+    EEPROM.put(EEPROM_ADMIN_CODE, this->adminCode);
 }
 
 void DisarmedMode::loop()
