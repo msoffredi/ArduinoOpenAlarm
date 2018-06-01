@@ -13,6 +13,7 @@
 #define ALARM_OUTPUT_STATUS 1
 #define ALARM_OUTPUT_ARM 2
 #define ALARM_OUTPUT_DISARM 3
+#define ALARM_OUTPUT_BELL 4
 
 class AlarmOutput
 {

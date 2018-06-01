@@ -10,6 +10,13 @@ ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor*
 
 void ArmedMode::loop()
 {
+    if (this->alarm->getBell())
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_ON)))
+                );
+    }
+    
     AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
     
     if (commandObj.getCommand() != ALARM_COMMAND_NONE)
@@ -39,5 +46,14 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
                 );
+        
+        if (this->alarm->getBell())
+        {
+            this->alarm->setBell(false);
+            
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_OFF)))
+                    );
+        }
     }
 }

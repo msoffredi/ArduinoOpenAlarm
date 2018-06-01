@@ -5,6 +5,7 @@ Alarm::Alarm()
     this->numSensors = 0;
     this->status = ALARM_STATUS_DISARMED;
     this->operationMode = ALARM_OPERATION_MODE_USER;
+    this->bell = false;
 }
 
 uint8_t Alarm::addSensor(Sensor sensor) 
@@ -49,27 +50,28 @@ Sensor* Alarm::getSensor(uint8_t sensorIdx)
 
 void Alarm::loop()
 {
-    WirelessRF wRFObj;
-    String ID;
-    Sensor* sensor;
-
-    // We check wired sensors first
-    for (int x=1; x<=this->numSensors; x++)
+    if (this->checkWiredSensorsActive() && !this->bell)
     {
-        if (!(this->sensors[x-1].isWireless()))
-        {
-            if (digitalRead(this->sensors[x-1].getSensorPin()))
-            {
-                this->sensors[x-1].setActive(true);
-            }
-            else
-            {
-                this->sensors[x-1].setActive(false);
-            }
-        }
+        this->bell = true;
     }
     
-    // Read until we don't have any Wireless sensor reporting
+    if (this->checkWirelessSensorsActive() && !this->bell)
+    {
+        this->bell = true;
+    }    
+}
+
+bool Alarm::getBell()
+{
+    return this->bell;
+}
+
+bool Alarm::checkWirelessSensorsActive()
+{
+    WirelessRF wRFObj;
+    String ID;
+    bool returnValue = false;
+
     do 
     {
         ID = wRFObj.getRFDeviceRead();
@@ -82,6 +84,7 @@ void Alarm::loop()
                     && this->sensors[x-1].getSensorID() == ID)
                 {
                     this->sensors[x-1].setActive(true);
+                    returnValue = true;
                     break;
                 }
                 else if (this->sensors[x-1].isWireless() 
@@ -94,6 +97,31 @@ void Alarm::loop()
         }
     }
     while (ID != "");
+    
+    return returnValue;
+}
+
+bool Alarm::checkWiredSensorsActive()
+{
+    bool returnValue = false;
+    
+    for (int x=1; x<=this->numSensors; x++)
+    {
+        if (!(this->sensors[x-1].isWireless()))
+        {
+            if (digitalRead(this->sensors[x-1].getSensorPin()))
+            {
+                this->sensors[x-1].setActive(true);
+                returnValue = true;
+            }
+            else
+            {
+                this->sensors[x-1].setActive(false);
+            }
+        }
+    }
+    
+    return returnValue;
 }
 
 uint8_t Alarm::getOperationMode()
@@ -117,4 +145,9 @@ void Alarm::delSensor(uint8_t index)
     }
     
     this->numSensors--;
+}
+
+void Alarm::setBell(bool bell)
+{
+    this->bell = bell;
 }
