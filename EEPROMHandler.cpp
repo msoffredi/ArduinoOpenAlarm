@@ -2,6 +2,8 @@
 
 EEPROMHandler::EEPROMHandler()
 {
+    this->message = MESSAGE_NONE;
+            
     String eepromVersion = this->readVersion();
     char softwareVersion[EEPROM_VERSION_LEN] = SOFTWARE_VERSION;
     
@@ -36,4 +38,14 @@ String EEPROMHandler::readVersion()
 bool EEPROMHandler::isFirstTime()
 {
     return this->firstTime;
+}
+
+void EEPROMHandler::setMessage(uint8_t message)
+{
+    this->message = message;
+}
+
+uint8_t EEPROMHandler::getMessage()
+{
+    return this->message;
 }

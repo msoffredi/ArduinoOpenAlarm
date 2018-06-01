@@ -40,6 +40,7 @@ private:
     bool pinNotInBlacklist(uint8_t pin);
     void initUserAndAdminCodes();
     void writeToEEPROM();
+    void changeUserCode(AlarmCommand* commandObj);
     
 public:
     DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
