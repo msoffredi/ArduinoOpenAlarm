@@ -167,3 +167,19 @@ bool Alarm::noSensorsActive()
     
     return noSensorsActive;
 }
+
+bool Alarm::isFreePin(uint8_t pin)
+{
+    bool isFree = true;
+    
+    for (int x=1; x<=this->numSensors; x++)
+    {
+        if (this->sensors[x-1].getSensorPin() == pin)
+        {
+            isFree = false;
+            break;
+        }
+    }
+    
+    return isFree;
+}
