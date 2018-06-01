@@ -103,6 +103,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->changeUserCode(&commandObj);
         }
+        else if (command == ALARM_COMMAND_CHANGE_ADMIN_CODE) 
+        {
+            this->changeAdminCode(&commandObj);
+        }
     }
     else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
     {
@@ -132,6 +136,20 @@ void DisarmedMode::changeUserCode(AlarmCommand* commandObj)
         this->eeprom->setMessage(MESSAGE_READ_USER_CODE);
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_USER_CODE_CHANGED)) + code.toInt())
+                );
+    }
+}
+
+void DisarmedMode::changeAdminCode(AlarmCommand* commandObj)
+{
+    String code = commandObj->getParameter(1);
+    
+    if (code.toInt() >= 0 && code.toInt() < 10000)
+    {
+        this->adminCode = code.toInt();
+        EEPROM.put(EEPROM_ADMIN_CODE, this->adminCode);
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_ADMIN_CODE_CHANGED)) + code.toInt())
                 );
     }
 }
