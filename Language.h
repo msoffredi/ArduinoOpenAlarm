@@ -1,13 +1,5 @@
-#ifndef LANGUAGEENGLISH_H
-#define LANGUAGEENGLISH_H
-
-#if defined(ARDUINO)
- #if ARDUINO >= 100
-  #include <Arduino.h>
- #else
-  #include <wiring.h>
- #endif 
-#endif
+#ifndef LANGUAGE_H
+#define LANGUAGE_H
 
 #define TEXT_INITIALIZING "Initializing Alarm..."
 #define TEXT_INIT_DONE "Ready!"
@@ -52,4 +44,4 @@
 #define TEXT_WIRELESS_SENSOR_EXISTS "Wireless sensor already registered!"
 #define TEXT_WIRELESS_TIMEOUT_LEARNING "Timeout while learning new sensor!"
 
-#endif /* LANGUAGEENGLISH_H */
+#endif /* LANGUAGE_H */
