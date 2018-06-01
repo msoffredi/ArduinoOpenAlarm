@@ -39,7 +39,7 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
 {
     String code = commandObj->getParameter(1);
     
-    if (code.toInt() == this->userCode && this->alarm->getStatus() == ALARM_STATUS_ARMED)
+    if (code.toInt() == this->userCode)
     {
         this->alarm->setStatus(ALARM_STATUS_DISARMED);
         
