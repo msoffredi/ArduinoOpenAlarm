@@ -151,3 +151,19 @@ void Alarm::setBell(bool bell)
 {
     this->bell = bell;
 }
+
+bool Alarm::noSensorsActive()
+{
+    bool noSensorsActive = true;
+    
+    for (int x=1; x<=this->numSensors; x++)
+    {
+        if (this->sensors[x-1].isActive())
+        {
+            noSensorsActive = false;
+            break;
+        }
+    }
+    
+    return noSensorsActive;
+}

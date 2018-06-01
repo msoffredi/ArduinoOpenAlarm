@@ -45,6 +45,7 @@ public:
     void setOperationMode(uint8_t operationMode);
     void setBell(bool bell);
     bool getBell();
+    bool noSensorsActive();
     
 };
 
