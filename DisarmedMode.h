@@ -35,13 +35,15 @@ private:
     void processAlarmStatus();
     void addSensor(AlarmCommand* commandObj);
     void delSensor(AlarmCommand* commandObj);
-    void arm(AlarmCommand* commandObj);
     void enterAdminMode(AlarmCommand* commandObj);
     bool pinNotInBlacklist(uint8_t pin);
     void initUserAndAdminCodes();
     void writeToEEPROM();
     void changeUserCode(AlarmCommand* commandObj);
     void changeAdminCode(AlarmCommand* commandObj);
+    
+protected:
+    void arm(AlarmCommand* commandObj);
     
 public:
     DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);

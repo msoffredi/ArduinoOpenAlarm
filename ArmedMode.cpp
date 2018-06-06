@@ -27,9 +27,7 @@ void ArmedMode::loop()
     
     if (this->alarm->getBell())
     {
-        this->outProcessor->processOutput(
-                AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_ON)))
-                );
+        this->ringBell();
     }
     
     AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
@@ -38,6 +36,13 @@ void ArmedMode::loop()
     {
         this->processCommand(commandObj);
     }
+}
+
+void ArmedMode::ringBell()
+{
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_ON)))
+            );
 }
 
 void ArmedMode::processCommand(AlarmCommand commandObj)
@@ -62,13 +67,17 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
                 );
         
-        if (this->alarm->getBell())
-        {
-            this->alarm->setBell(false);
-            
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_OFF)))
-                    );
-        }
+    }
+}
+
+void ArmedMode::setBellOff()
+{
+    if (this->alarm->getBell())
+    {
+        this->alarm->setBell(false);
+
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_OFF)))
+                );
     }
 }

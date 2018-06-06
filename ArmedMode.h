@@ -27,7 +27,11 @@ private:
     EEPROMHandler* eeprom;
 
     void processCommand(AlarmCommand command);
+    
+protected:
     void disarm(AlarmCommand* commandObj);
+    void setBellOff();
+    void ringBell();
     
 public:
     ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
