@@ -13,6 +13,7 @@ This project requires RCSwitch library and can be found here: [https://github.co
 - Bluetooth enabled for Mobile control
 - WiFi enabled for monitoring and remote control over Internet
 - Other languages supported
+- RTC module support
 
 
 ## Potential features 
