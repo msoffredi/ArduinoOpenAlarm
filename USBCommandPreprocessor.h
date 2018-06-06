@@ -42,6 +42,7 @@ class USBCommandPreprocessor : public CommandPreprocessor
 private:
     String getCommandFromString(String usbString);
     void extractParameters(String serialInput, AlarmCommand* commandObj);
+    bool stringIsNumeric(String var);
     
 public:
     AlarmCommand getNextCommand();
