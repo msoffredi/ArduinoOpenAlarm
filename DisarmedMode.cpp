@@ -122,6 +122,11 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->enterAdminMode(&commandObj);
         }
+        else if (command == ALARM_COMMAND_NUMERIC_CODE)
+        {
+            commandObj.setCommand(ALARM_COMMAND_ARM);
+            this->arm(&commandObj);
+        }
     }
 }
 

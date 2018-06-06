@@ -70,11 +70,32 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_CHANGE_ADMIN_CODE);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (this->stringIsNumeric(command))
+        {
+            commandObj.setCommand(ALARM_COMMAND_NUMERIC_CODE);
+            commandObj.setParameter(1, command);
+        }
     }
     
     this->lastCommand = commandObj;
     
     return commandObj;
+}
+
+bool USBCommandPreprocessor::stringIsNumeric(String var)
+{
+    bool returnValue = true;
+    
+    for (int x=0; x<var.length(); x++)
+    {
+        if (var[x] < '0' || var[x] > '9')
+        {
+            returnValue = false;
+            break;
+        }
+    }
+    
+    return returnValue;
 }
 
 String USBCommandPreprocessor::getCommandFromString(String usbString)

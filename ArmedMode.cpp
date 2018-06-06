@@ -53,6 +53,11 @@ void ArmedMode::processCommand(AlarmCommand commandObj)
     {
         this->disarm(&commandObj);
     }
+    else if (command == ALARM_COMMAND_NUMERIC_CODE)
+    {
+        commandObj.setCommand(ALARM_COMMAND_DISARM);
+        this->disarm(&commandObj);
+    }
 }
 
 void ArmedMode::disarm(AlarmCommand* commandObj)
