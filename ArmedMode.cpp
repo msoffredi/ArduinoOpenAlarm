@@ -66,12 +66,12 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
     
     if (code.toInt() == this->userCode)
     {
+        this->alarm->setBell(false);
         this->alarm->setStatus(ALARM_STATUS_DISARMED);
         
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
                 );
-        
     }
 }
 
