@@ -160,13 +160,14 @@ void Alarm::setOperationMode(uint8_t operationMode)
 
 void Alarm::delSensor(uint8_t index)
 {
-    if (index < this->numSensors)
+    if (index <= this->numSensors)
     {
         for (int x=index-1; x<(this->numSensors-1); x++)
         {
             this->sensors[x] = this->sensors[x+1];
         }
         
+        this->sensors[this->numSensors-1].clearSensor();
         this->numSensors--;
         
         this->writeToEEPROM();
