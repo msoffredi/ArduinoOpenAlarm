@@ -2,6 +2,11 @@
 
 Sensor::Sensor() 
 {
+    this->clearSensor();
+}
+
+void Sensor::clearSensor()
+{
     this->power = false;
     this->active = false;
     this->lastActive = 0;
@@ -14,7 +19,7 @@ Sensor::Sensor()
     // 255 means undefined as we can't have 255 wired sensors connected (not enough ports)
     this->sensorPin = 255;
 }
-
+    
 bool Sensor::isOn() 
 {
     return this->power;

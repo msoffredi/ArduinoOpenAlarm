@@ -36,7 +36,8 @@ public:
     bool isActive();
     void setPower(bool power);
     void setActive(bool activeStatus);
-    
+    void clearSensor();
+        
     // Wired methods
     void setSensorID(String ID);
     void setSensorPin(uint8_t pin);
