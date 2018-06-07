@@ -21,6 +21,14 @@ void Alarm::initSensors()
     {
         EEPROM.get(EEPROM_NUMSENSORS_ADDR, this->numSensors);
         EEPROM.get(EEPROM_SENSORS_ADDR, this->sensors);
+    }    
+    
+    for (int x=0; x<this->numSensors; x++)
+    {
+        if (!(this->sensors[x].isWireless()))
+        {
+            pinMode(this->sensors[x].getSensorPin(), INPUT_PULLUP);
+        }
     }
 }
 
@@ -74,15 +82,22 @@ Sensor* Alarm::getSensor(uint8_t sensorIdx)
 
 void Alarm::loop()
 {
-    if (this->checkWiredSensorsActive() && !this->bell)
+    bool ringBell = false;
+    
+    if (this->checkWiredSensorsActive())
+    {
+        ringBell = true;
+    }
+    
+    if (this->checkWirelessSensorsActive())
+    {
+        ringBell = true;
+    }
+
+    if (ringBell && this->getStatus() == ALARM_STATUS_ARMED && !this->bell)
     {
         this->bell = true;
     }
-    
-    if (this->checkWirelessSensorsActive() && !this->bell)
-    {
-        this->bell = true;
-    }    
 }
 
 bool Alarm::getBell()
@@ -104,18 +119,19 @@ bool Alarm::checkWirelessSensorsActive()
         {
             for (int x=1; x<=this->numSensors; x++)
             {
-                if (this->sensors[x-1].isWireless() 
-                    && this->sensors[x-1].getSensorID() == ID)
+                if (this->sensors[x-1].isWireless())
                 {
-                    this->sensors[x-1].setActive(true);
-                    returnValue = true;
-                    break;
-                }
-                else if (this->sensors[x-1].isWireless() 
-                    && this->sensors[x-1].getSensorInactiveID() == ID)
-                {
-                    this->sensors[x-1].setActive(false);
-                    break;
+                    if (this->sensors[x-1].getSensorID() == ID)
+                    {
+                        this->sensors[x-1].setActive(true);
+                        returnValue = true;
+                        break;
+                    }
+                    else if (this->sensors[x-1].getSensorInactiveID() == ID)
+                    {
+                        this->sensors[x-1].setActive(false);
+                        break;
+                    }
                 }
             }
         }
@@ -137,6 +153,7 @@ bool Alarm::checkWiredSensorsActive()
             {
                 this->sensors[x-1].setActive(true);
                 returnValue = true;
+                break;
             }
             else
             {
