@@ -41,6 +41,7 @@ private:
     void writeToEEPROM();
     void changeUserCode(AlarmCommand* commandObj);
     void changeAdminCode(AlarmCommand* commandObj);
+    void sensorOnOff(AlarmCommand* commandObj, bool power);
     
 protected:
     void arm(AlarmCommand* commandObj);

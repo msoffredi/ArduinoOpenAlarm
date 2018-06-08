@@ -44,4 +44,7 @@
 #define TEXT_WIRELESS_SENSOR_EXISTS "Sensor wireless ya existe!"
 #define TEXT_WIRELESS_TIMEOUT_LEARNING "Tiempo limite alcanzado en modo aprendizaje!"
 
+#define TEXT_ADMIN_SENSOR_ON_OFF_1 "El sensor "
+#define TEXT_ADMIN_SENSOR_ON_OFF_2 " fue cambiado a "
+
 #endif /* LANGUAGE_H */

@@ -119,7 +119,7 @@ bool Alarm::checkWirelessSensorsActive()
         {
             for (int x=1; x<=this->numSensors; x++)
             {
-                if (this->sensors[x-1].isWireless())
+                if (this->sensors[x-1].isOn() && this->sensors[x-1].isWireless())
                 {
                     if (this->sensors[x-1].getSensorID() == ID)
                     {
@@ -147,7 +147,7 @@ bool Alarm::checkWiredSensorsActive()
     
     for (int x=1; x<=this->numSensors; x++)
     {
-        if (!(this->sensors[x-1].isWireless()))
+        if (this->sensors[x-1].isOn() && !(this->sensors[x-1].isWireless()))
         {
             if (digitalRead(this->sensors[x-1].getSensorPin()))
             {
