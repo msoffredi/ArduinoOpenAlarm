@@ -103,6 +103,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->sensorOnOff(&commandObj, false);
         }
+        else if (command == ALARM_COMMAND_SENSOR_ON) 
+        {
+            this->sensorOnOff(&commandObj, true);
+        }
         else if (command == ALARM_COMMAND_CHANGE_USER_CODE) 
         {
             this->changeUserCode(&commandObj);
@@ -140,7 +144,7 @@ void DisarmedMode::sensorOnOff(AlarmCommand* commandObj, bool power)
     
     if (idx > 0 
             && idx <= this->alarm->getNumSensors() 
-            && this->alarm->getSensor(idx)->isOn())
+            && this->alarm->getSensor(idx)->isOn() != power)
     {
         this->alarm->getSensor(idx)->setPower(power);
         this->alarm->writeToEEPROM();

@@ -3,6 +3,7 @@ Version 0.1.2 (candidate)
 
 FEATURES
 * Added command to turn a sensor off (without deleting it)
+* Added command to turn a sensor on (for sensors previously turned off)
 
 BUGS
 * Fixed BUG preventing admin to delete last sensor listed
