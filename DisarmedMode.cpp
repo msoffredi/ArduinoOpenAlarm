@@ -99,6 +99,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
                     );
         }
+        else if (command == ALARM_COMMAND_SENSOR_OFF) 
+        {
+            this->sensorOnOff(&commandObj, false);
+        }
         else if (command == ALARM_COMMAND_CHANGE_USER_CODE) 
         {
             this->changeUserCode(&commandObj);
@@ -127,6 +131,24 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
             commandObj.setCommand(ALARM_COMMAND_ARM);
             this->arm(&commandObj);
         }
+    }
+}
+
+void DisarmedMode::sensorOnOff(AlarmCommand* commandObj, bool power)
+{
+    uint8_t idx = commandObj->getParameter(1).toInt();
+    
+    if (idx > 0 
+            && idx <= this->alarm->getNumSensors() 
+            && this->alarm->getSensor(idx)->isOn())
+    {
+        this->alarm->getSensor(idx)->setPower(power);
+        this->alarm->writeToEEPROM();
+        
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, 
+                String(F(TEXT_ADMIN_SENSOR_ON_OFF_1)) + idx + F(TEXT_ADMIN_SENSOR_ON_OFF_2) + ((power) ? "on" : "off"))
+                );
     }
 }
 

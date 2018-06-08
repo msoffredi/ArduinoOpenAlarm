@@ -2,10 +2,12 @@ Version 0.1.2 (candidate)
 =========================
 
 FEATURES
-*
+* Added command to turn a sensor off (without deleting it)
 
 BUGS
-* Fixed bug preventing admin to delete last sensor listed
+* Fixed BUG preventing admin to delete last sensor listed
+* Fixed BUG where bell was not reset properly 
+* Fixed BUG where wired sensors didn't have their pins initialized properly
 
 Version 0.1.1 (released)
 =============

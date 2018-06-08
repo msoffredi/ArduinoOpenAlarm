@@ -30,6 +30,8 @@
 // sensorID can be obtained by listing sensors with lists
 #define USB_ALARM_COMMAND_DEL_SENSOR "dels"
 
+#define USB_ALARM_COMMAND_SENSOR_OFF "soff"
+
 #define USB_ALARM_COMMAND_CHANGE_USER_CODE "ucode"
 #define USB_ALARM_COMMAND_CHANGE_ADMIN_CODE "acode"
 

@@ -44,4 +44,7 @@
 #define TEXT_WIRELESS_SENSOR_EXISTS "Wireless sensor already registered!"
 #define TEXT_WIRELESS_TIMEOUT_LEARNING "Timeout while learning new sensor!"
 
+#define TEXT_ADMIN_SENSOR_ON_OFF_1 "Sensor "
+#define TEXT_ADMIN_SENSOR_ON_OFF_2 " was turned "
+
 #endif /* LANGUAGE_H */

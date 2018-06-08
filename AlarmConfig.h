@@ -2,7 +2,7 @@
 #define ALARMCONFIG_H
 
 // Alarm software version
-#define SOFTWARE_VERSION "0.1.2.2"
+#define SOFTWARE_VERSION "0.1.2"
 
 // When a sensor gets activated, for how long we keep it that way
 #define SENSOR_ACTIVATED_TIME 5000

@@ -34,7 +34,6 @@ private:
     bool checkWiredSensorsActive();
     bool checkWirelessSensorsActive();
     void initSensors();
-    void writeToEEPROM();
     
 public:
     Alarm(EEPROMHandler* eeprom);
@@ -51,6 +50,7 @@ public:
     bool getBell();
     bool noSensorsActive();
     bool isFreePin(uint8_t pin);
+    void writeToEEPROM();
     
 };
 
