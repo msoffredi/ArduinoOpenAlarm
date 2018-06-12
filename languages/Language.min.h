@@ -15,8 +15,6 @@
 #define TEXT_ALARM_STATUS ""
 #define TEXT_ALARM_ARMED "Alarm armed"
 #define TEXT_ALARM_DISARMED "Alarm disarmed"
-#define TEXT_ALARM_BELL_ON "Bell on"
-#define TEXT_ALARM_BELL_OFF "Bell off"
 #define TEXT_ALARM_NOT_ARMED_SENSORS_ACTIVE "Alarm not armed. Sensor active"
 
 #define TEXT_SENSOR_ADDED "Sensor added. Sensor #"

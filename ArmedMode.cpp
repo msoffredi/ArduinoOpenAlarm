@@ -40,9 +40,7 @@ void ArmedMode::loop()
 
 void ArmedMode::ringBell()
 {
-    this->outProcessor->processOutput(
-            AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_ON)))
-            );
+    this->outProcessor->processBell(ALARM_BELL_ON);
 }
 
 void ArmedMode::processCommand(AlarmCommand commandObj)
@@ -67,22 +65,12 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
     if (code.toInt() == this->userCode)
     {
         this->alarm->setBell(false);
+        this->outProcessor->processBell(ALARM_BELL_OFF);
+        
         this->alarm->setStatus(ALARM_STATUS_DISARMED);
         
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
-                );
-    }
-}
-
-void ArmedMode::setBellOff()
-{
-    if (this->alarm->getBell())
-    {
-        this->alarm->setBell(false);
-
-        this->outProcessor->processOutput(
-                AlarmOutput(ALARM_OUTPUT_BELL, String(F(TEXT_ALARM_BELL_OFF)))
                 );
     }
 }

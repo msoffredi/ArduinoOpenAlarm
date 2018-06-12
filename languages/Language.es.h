@@ -15,8 +15,6 @@
 #define TEXT_ALARM_STATUS "Estado Alarma: "
 #define TEXT_ALARM_ARMED "Alarma armada"
 #define TEXT_ALARM_DISARMED "Alarma desarmada"
-#define TEXT_ALARM_BELL_ON "Sirena on"
-#define TEXT_ALARM_BELL_OFF "Sirena off"
 #define TEXT_ALARM_NOT_ARMED_SENSORS_ACTIVE "Alarma no armada. Todos los sensores deben estar inactivos."
 
 #define TEXT_SENSOR_ADDED "Sensor agregado. Sensor #"
