@@ -1,7 +1,12 @@
 #include "LCDOutputProcessor.h"
 
+#ifdef I2C_DISPLAY
 LCDOutputProcessor::LCDOutputProcessor() 
     : LiquidCrystal_I2C(LCD_I2C_ADDRESS, LCD_ROWS, LCD_COLS) 
+#else
+LCDOutputProcessor::LCDOutputProcessor() 
+    : LiquidCrystal(LCD_RS, LCD_EN, LCD_D4, LCD_D5, LCD_D6, LCD_D7) 
+#endif
 {
     this->beginDone = false;
 }
@@ -17,7 +22,7 @@ void LCDOutputProcessor::processOutput(AlarmOutput outputObj)
         this->begin();
         this->backlight();
         #else
-        this->begin(LCD_ROWS, LCD_COLS)
+        this->begin(LCD_ROWS, LCD_COLS);
         #endif
 
     }
