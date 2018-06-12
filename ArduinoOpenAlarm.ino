@@ -7,6 +7,7 @@
 #include "USBCommandPreprocessor.h"
 USBCommandPreprocessor commPP;
 
+// Standard USB Output Processor
 #include "USBOutputProcessor.h"
 USBOutputProcessor outP;
 
