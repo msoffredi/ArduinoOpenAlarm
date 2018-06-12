@@ -25,6 +25,9 @@
  * where it says "I2C ONLY" if your display is I2C, and only edit "NON I2C ONLY"
  * if your display IS NOT I2C.
  *
+ * Note: When using this output processor you should consider using minimized
+ * versions of the Language.h file. See /languages/README.md 
+ * 
  */
 
 #ifndef LCDOUTPUTPROCESSOR_H
