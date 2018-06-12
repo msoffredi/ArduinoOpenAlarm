@@ -30,12 +30,34 @@ void LCDOutputProcessor::processOutput(AlarmOutput outputObj)
         case ALARM_OUTPUT_DISARM:
         case ALARM_OUTPUT_BELL:
         case ALARM_OUTPUT_TEXT:
-            this->clear();
-            this->print(outputObj.getOutputText());
-            Serial.println(outputObj.getOutputText());
+            this->outputText(outputObj.getOutputText());
             break;            
     }
 }
+
+void LCDOutputProcessor::outputText(String text)
+{
+    this->clear();
+
+    if (text.indexOf('.') == -1)
+    {
+        this->print(text);
+    }
+    else if (text.indexOf('.', text.indexOf('.')+1) == -1)
+    {
+        this->print(text.substring(0, text.indexOf('.')));
+        this->setCursor(0, 1);
+        this->print(text.substring(text.indexOf('.')+2));
+    }
+    // TODO we should find a better way to display multiple lines 
+    else
+    {
+        this->print(text);
+    }
+    
+    // Make LCD display USB compatible
+    Serial.println(text);
+ }
 
 void LCDOutputProcessor::processAlarmStatus(String statuses)
 {

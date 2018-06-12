@@ -75,6 +75,8 @@ class LCDOutputProcessor : public OutputProcessor, public LiquidCrystal
 private:
     bool beginDone;
     
+    void outputText(String text);
+    
 public:
     LCDOutputProcessor();
     void processOutput(AlarmOutput outputObj);
