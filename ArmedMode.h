@@ -30,7 +30,6 @@ private:
     
 protected:
     void disarm(AlarmCommand* commandObj);
-    void setBellOff();
     void ringBell();
     
 public:

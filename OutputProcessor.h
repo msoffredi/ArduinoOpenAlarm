@@ -10,6 +10,8 @@
 #endif
 
 #include "AlarmOutput.h"
+#include "Alarm.h"
+#include "Language.h"
 
 class OutputProcessor
 {
@@ -17,6 +19,7 @@ private:
 public:
     virtual void processOutput(AlarmOutput outputObj) = 0;
     virtual void processAlarmStatus(String statuses) = 0;
+    virtual void processBell(bool bellStatus) = 0;
     
 };
 

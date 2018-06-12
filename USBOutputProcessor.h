@@ -10,7 +10,6 @@
 #endif
 
 #include "OutputProcessor.h"
-#include "Language.h"
 
 class USBOutputProcessor : public OutputProcessor
 {
@@ -18,6 +17,7 @@ private:
 public:
     void processOutput(AlarmOutput outputObj);
     void processAlarmStatus(String statuses);
+    void processBell(bool bellStatus);
     
 };
 

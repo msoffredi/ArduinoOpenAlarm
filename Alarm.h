@@ -21,6 +21,9 @@
 #define ALARM_OPERATION_MODE_USER 0
 #define ALARM_OPERATION_MODE_ADMIN 1
 
+#define ALARM_BELL_ON 1
+#define ALARM_BELL_OFF 0
+
 class Alarm
 {
 private:

@@ -1,6 +1,13 @@
 /*
  * How to use this alternative output processor:
  * 
+ * First of all, you need to install a Library (if you don't already have it).
+ * The library can be downloaded from here: 
+ * https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library/archive/master.zip
+ * 
+ * And I recommend you go over at least one of the examples there to verify 
+ * the library can handle your display. After that, follow the steps below:
+ * 
  * 1) Add the following lines to the top of your ArduinoOpenAlarm.ino file:
  * 
  * #include <Wire.h>
@@ -63,9 +70,8 @@
 
 // EDITABLE AREA (end)
 
-#include "Wire.h"
 #include "OutputProcessor.h"
-#include "Language.h"
+#include "Wire.h"
 
 #ifdef I2C_DISPLAY
 #include "LiquidCrystal_I2C.h" 
@@ -84,6 +90,7 @@ public:
     LCDOutputProcessor();
     void processOutput(AlarmOutput outputObj);
     void processAlarmStatus(String statuses);
+    void processBell(bool bellStatus);
     
 };
 
