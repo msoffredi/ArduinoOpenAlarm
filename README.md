@@ -7,6 +7,12 @@ Open Source Arduino based Alarm.
 
 This project requires RCSwitch library and can be found here: [https://github.com/sui77/rc-switch/archive/master.zip](https://github.com/sui77/rc-switch/archive/master.zip)
 
+## Folders content
+
+- /doc/ - Documentation
+- /languages/ - Texts translated to other languages
+- /output/ - Alternative output options (LCD displays for example)
+
 
 ## Features list for next versions
 
