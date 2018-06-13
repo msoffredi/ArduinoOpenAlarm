@@ -1,7 +1,8 @@
 /*
  * How to use this alternative output processor:
  * 
- * First of all, you need to install a Library (if you don't already have it).
+ * First of all, if your LCD is an I2C version, you need to install a Library 
+ * (if you don't already have it).
  * The library can be downloaded from here: 
  * https://github.com/fdebrabander/Arduino-LiquidCrystal-I2C-library/archive/master.zip
  * 
@@ -10,13 +11,18 @@
  * 
  * 1) Add the following lines to the top of your ArduinoOpenAlarm.ino file:
  * 
+ * 1a) If your LCD is I2C
  * #include <Wire.h>
  * #include "LiquidCrystal_I2C.h"
  * 
+ * 1b) If your LCD is I2C
+ * #include <Wire.h>
+ * #include "LiquidCrystal.h"
+ * 
  * 2) Copy the following files to the project root directory:
  * 
- * LCDOutputProcessor.h
- * LCDOutputProcessor.cpp
+ * /output/LCDOutputProcessor.h
+ * /output/LCDOutputProcessor.cpp
  * 
  * 3) Replace the following lines of your ArduinoOpenAlarm.ino file:
  * 
@@ -30,7 +36,9 @@
  * 
  * 4) Edit the "EDITABLE AREA" on this file to match your LCD display. Only edit
  * where it says "I2C ONLY" if your display is I2C, and only edit "NON I2C ONLY"
- * if your display IS NOT I2C.
+ * if your display IS NOT I2C. If your display is I2C also comment the line with:
+ * 
+ * #define I2C_DISPLAY
  *
  * Note: When using this output processor you should consider using minimized
  * versions of the Language.h file. See /languages/README.md 
@@ -50,8 +58,8 @@
 
 // EDITABLE AREA (start)
 
-// Change this to 0 if your display is not I2C
-#define I2C_DISPLAY 1
+// Comment this line if your display is not I2C
+#define I2C_DISPLAY
 
 //////////////
 // I2C ONLY //
@@ -67,6 +75,13 @@
 #define LCD_ROWS 16
 // Display number of cols
 #define LCD_COLS 2
+// Display pins
+#define LCD_RS 3
+#define LCD_EN 4
+#define LCD_D4 5
+#define LCD_D5 6
+#define LCD_D6 7
+#define LCD_D7 8
 
 // EDITABLE AREA (end)
 

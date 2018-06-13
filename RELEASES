@@ -5,6 +5,7 @@ FEATURES
 * Added command to turn a sensor off (without deleting it)
 * Added command to turn a sensor on (for sensors previously turned off)
 * Added support for LCD characters based display for alarm output (I2C & non I2C)
+* Added support for non I2C matrix keypads based on Keypad.h library
 
 BUGS
 * Fixed BUG preventing admin to delete last sensor listed
