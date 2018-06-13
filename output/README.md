@@ -30,9 +30,7 @@ you can (sometimes have to) change, like PIN numbers, communication addresses,
 etc. Always take a quick look at the .h file. They usually have enough in-line
 information for configuration variables.
 
-## LCD standard displays
+## Options available
 
-These displays come in many different configurations including interfaces (like
-I2C) and display capacity (like 16 rows x 2 columns). The Output processor can
-easily be adapted to most market options.
-
+- LCDOutputProcessor: Output option for LCD displays of the type of those with
+1, 2 or 4 lines, with 8-40 characters in their I2C and non I2C versions.

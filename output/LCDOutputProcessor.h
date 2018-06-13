@@ -21,8 +21,8 @@
  * 
  * 2) Copy the following files to the project root directory:
  * 
- * LCDOutputProcessor.h
- * LCDOutputProcessor.cpp
+ * /output/LCDOutputProcessor.h
+ * /output/LCDOutputProcessor.cpp
  * 
  * 3) Replace the following lines of your ArduinoOpenAlarm.ino file:
  * 
