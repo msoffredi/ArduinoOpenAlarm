@@ -22,6 +22,7 @@
 #define TEXT_SENSOR_DELETED "Deleted #"
 #define TEXT_SENSOR_NOT_ADDED_BLACKLIST "Sensor not added. Pin blacklisted"
 #define TEXT_SENSOR_NOT_ADDED_USED_PIN "Sensor not added. Used pin"
+#define TEXT_SENSOR_INVALID "Can't delete. Invalid sensor"
 
 #define TEXT_ENTER_ADMIN_MODE "Admin mode on"
 #define TEXT_EXIT_ADMIN_MODE "Admin mode off"

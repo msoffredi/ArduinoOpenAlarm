@@ -449,6 +449,12 @@ void DisarmedMode::delSensor(AlarmCommand* commandObj)
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_DELETED)) + idx)
                 );
     }
+    else
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_INVALID)) + idx)
+                );
+    }
 }
 
 void DisarmedMode::arm(AlarmCommand* commandObj)
