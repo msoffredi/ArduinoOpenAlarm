@@ -1,4 +1,10 @@
-Version 0.1.2 (candidate)
+Version 0.1.3 (candidate)
+=========================
+
+FEATURES
+* Trying to delete an invalid sensor throws error
+
+Version 0.1.2 (released)
 =========================
 
 FEATURES
