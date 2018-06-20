@@ -5,9 +5,9 @@ void OutputProcessor::beep(uint8_t repetition, uint16_t repetitionDuration, uint
 {
     for (uint8_t x=0; x<repetition; x++)
     {
-        digitalWrite(BEEPER_PIN, LOW);
+        digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
         delay(duration);
-        digitalWrite(BEEPER_PIN, HIGH);
+        digitalWrite(BEEPER_PIN, !BEEPER_ACTIVE_PIN_SIGNAL);
         
         if (x < repetition-1)
         {
