@@ -10,8 +10,13 @@
 #endif
 
 #include "AlarmOutput.h"
+#include "AlarmConfig.h"
 #include "Alarm.h"
 #include "Language.h"
+
+#define BEEPER_PIN 7
+#define BEEP_DURATION 30
+#define BEEP_REPETITION_DURATION 100
 
 class OutputProcessor
 {
@@ -20,6 +25,10 @@ public:
     virtual void processOutput(AlarmOutput outputObj) = 0;
     virtual void processAlarmStatus(String statuses) = 0;
     virtual void processBell(bool bellStatus) = 0;
+    
+    #ifdef ALARM_BEEPER_AVAILABLE
+    static void beep(uint8_t repetition = 1, uint16_t repetitionDuration = BEEP_REPETITION_DURATION, uint16_t duration = BEEP_DURATION);
+    #endif
     
 };
 
