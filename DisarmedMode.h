@@ -42,6 +42,7 @@ private:
     void changeUserCode(AlarmCommand* commandObj);
     void changeAdminCode(AlarmCommand* commandObj);
     void sensorOnOff(AlarmCommand* commandObj, bool power);
+    void exitAdmin();
     
 protected:
     void arm(AlarmCommand* commandObj);

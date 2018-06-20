@@ -68,10 +68,7 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
     {
         if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
         {
-            this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
-                    );
+            this->exitAdmin();
         }
         else if (command == ALARM_COMMAND_WIRELESS_LEARN) 
         {
@@ -138,6 +135,19 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
     }
 }
 
+void DisarmedMode::exitAdmin()
+{
+    this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
+            );
+
+    #ifdef ALARM_BEEPER_AVAILABLE
+    delay(200);
+    OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+    #endif
+}
+
 void DisarmedMode::sensorOnOff(AlarmCommand* commandObj, bool power)
 {
     uint8_t idx = commandObj->getParameter(1).toInt();
@@ -153,6 +163,17 @@ void DisarmedMode::sensorOnOff(AlarmCommand* commandObj, bool power)
                 AlarmOutput(ALARM_OUTPUT_TEXT, 
                 String(F(TEXT_ADMIN_SENSOR_ON_OFF_1)) + idx + F(TEXT_ADMIN_SENSOR_ON_OFF_2) + ((power) ? "on" : "off"))
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -168,6 +189,17 @@ void DisarmedMode::changeUserCode(AlarmCommand* commandObj)
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_USER_CODE_CHANGED)) + code.toInt())
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -182,6 +214,17 @@ void DisarmedMode::changeAdminCode(AlarmCommand* commandObj)
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_ADMIN_CODE_CHANGED)) + code.toInt())
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -195,6 +238,17 @@ void DisarmedMode::enterAdminMode(AlarmCommand* commandObj)
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ENTER_ADMIN_MODE)))
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -255,12 +309,21 @@ void DisarmedMode::learnNewWirelessDevice()
                         + F(TEXT_LIST_SENSORS_ID) + newID
                         )
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            delay(200);
+            OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+            #endif
         }
         else
         {
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+            #endif
         }
     }
     else
@@ -268,6 +331,10 @@ void DisarmedMode::learnNewWirelessDevice()
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -323,12 +390,21 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                                     + F(TEXT_LIST_SENSORS_S2_ID) + sensor.getSensorInactiveID()
                                     )
                                 );
+                        
+                        #ifdef ALARM_BEEPER_AVAILABLE
+                        delay(200);
+                        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+                        #endif
                     }
                     else
                     {
                         this->outProcessor->processOutput(
                                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_S1_FAIL)))
                                 );
+                        
+                        #ifdef ALARM_BEEPER_AVAILABLE
+                        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+                        #endif
                     }
                 }
                 else
@@ -336,6 +412,10 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                     this->outProcessor->processOutput(
                             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                             );
+                    
+                    #ifdef ALARM_BEEPER_AVAILABLE
+                    OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+                    #endif
                 }
             }
             else
@@ -343,6 +423,10 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                 this->outProcessor->processOutput(
                         AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                         );
+                
+                #ifdef ALARM_BEEPER_AVAILABLE
+                OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+                #endif
             }            
         }
         else
@@ -350,6 +434,10 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+            #endif
         }
     }
     else
@@ -357,6 +445,10 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -404,12 +496,21 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
                         );
 
                 pinMode(pin.toInt(), INPUT_PULLUP);
+                
+                #ifdef ALARM_BEEPER_AVAILABLE
+                delay(200);
+                OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+                #endif
             }
             else
             {
                 this->outProcessor->processOutput(
                         AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_USED_PIN)))
                         );
+                
+                #ifdef ALARM_BEEPER_AVAILABLE
+                OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+                #endif
             }
         }
         else
@@ -417,6 +518,10 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_BLACKLIST)))
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+            #endif
         }
     }
 }
@@ -448,12 +553,21 @@ void DisarmedMode::delSensor(AlarmCommand* commandObj)
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_DELETED)) + idx)
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
     }
     else
     {
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_INVALID)) + idx)
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }
 
@@ -475,12 +589,27 @@ void DisarmedMode::arm(AlarmCommand* commandObj)
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_ARMED)))
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            delay(200);
+            OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+            #endif
         }
         else
         {
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_NOT_ARMED_SENSORS_ACTIVE)))
                     );
+            
+            #ifdef ALARM_BEEPER_AVAILABLE
+            OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+            #endif
         }
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }

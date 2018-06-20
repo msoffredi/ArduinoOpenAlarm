@@ -15,7 +15,7 @@
 #define ALARM_JUST_ARMED_TIMER 20000
 
 // List all reserved pins you don't want assigned to sensors
-const uint8_t pinBlacklist[] = {0, 1, 2};
+const uint8_t pinBlacklist[] = {0, 1, 2, 7};
 
 // If you don't have a beeper (buzzer with driver connected to a pin) you can
 // comment this line to save flash space.

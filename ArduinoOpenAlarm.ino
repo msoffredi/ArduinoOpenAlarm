@@ -11,6 +11,7 @@ USBCommandPreprocessor commPP;
 #include "USBOutputProcessor.h"
 USBOutputProcessor outP;
 
+#include "OutputProcessor.h"
 #include "Alarm.h"
 #include "ArmedMode.h"
 #include "DisarmedMode.h"
@@ -25,10 +26,17 @@ void setup()
 {
     Serial.begin(9600);
     while (!Serial);
-    
+        
     outP.processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F(TEXT_INITIALIZING)));
     // ...
     outP.processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F(TEXT_INIT_DONE)));
+
+    #ifdef ALARM_BEEPER_AVAILABLE
+    pinMode(BEEPER_PIN, OUTPUT);
+    OutputProcessor::beep();
+    delay(500);
+    OutputProcessor::beep(2);
+    #endif
 }
 
 void loop() 
