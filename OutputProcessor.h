@@ -16,6 +16,7 @@
 
 // Beeper related constants
 #define BEEPER_PIN 7
+#define BEEPER_ACTIVE_PIN_SIGNAL LOW
 #define BEEP_DURATION 30
 #define BEEP_REPETITION_DURATION 100
 #define BEEP_COMMAND_ERROR_DURATION 500
