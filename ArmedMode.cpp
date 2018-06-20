@@ -69,8 +69,23 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
         
         this->alarm->setStatus(ALARM_STATUS_DISARMED);
         
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(5);
+        #endif
+
         this->outProcessor->processOutput(
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
                 );
+        
+        #ifdef ALARM_BEEPER_AVAILABLE
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        #endif
+    }
+    else
+    {
+        #ifdef ALARM_BEEPER_AVAILABLE
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        #endif
     }
 }

@@ -59,6 +59,8 @@
 #endif
  
 #include "CommandPreprocessor.h"
+#include "AlarmConfig.h"
+#include "OutputProcessor.h"
 #include "Keypad.h"
 
 // Software related commands

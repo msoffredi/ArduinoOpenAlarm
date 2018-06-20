@@ -3,6 +3,8 @@ Version 0.1.3 (candidate)
 
 FEATURES
 * Trying to delete an invalid sensor throws error
+* Added concept of beeper. If available, added beeper to some commands and 
+keypad input
 
 Version 0.1.2 (released)
 =========================
