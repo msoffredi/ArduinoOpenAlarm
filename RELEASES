@@ -5,6 +5,7 @@ FEATURES
 * Trying to delete an invalid sensor throws error
 * Added concept of beeper. If available, added beeper to some commands and 
 keypad input
+* Added concept of external bell/siren attached to an Arduino pin
 
 Version 0.1.2 (released)
 =========================

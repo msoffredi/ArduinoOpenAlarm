@@ -67,17 +67,3 @@ void LCDOutputProcessor::processAlarmStatus(String statuses)
 {
     this->processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, statuses));
 }
-
-void LCDOutputProcessor::processBell(bool bellStatus)
-{
-    if (bellStatus == ALARM_BELL_ON)
-    {
-        // Customize your bell by activating here
-        this->processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F("Bell is on")));
-    }
-    else if (bellStatus == ALARM_BELL_OFF)
-    {
-        // Customize your bell by deactivating here
-        this->processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F("Bell is off")));
-    }
-}

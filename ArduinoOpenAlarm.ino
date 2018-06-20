@@ -28,7 +28,11 @@ void setup()
     while (!Serial);
         
     outP.processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F(TEXT_INITIALIZING)));
-    // ...
+
+    // Initializing bell
+    pinMode(BELL_PIN, OUTPUT);
+    digitalWrite(BELL_PIN, !BELL_ACTIVE_PIN_SIGNAL);
+    
     outP.processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F(TEXT_INIT_DONE)));
 
     #ifdef ALARM_BEEPER_AVAILABLE

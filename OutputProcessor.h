@@ -21,13 +21,17 @@
 #define BEEP_COMMAND_ERROR_DURATION 500
 #define BEEP_COMMAND_ACCEPTED_REPETITIONS 3
 
+// Bell related constants
+#define BELL_PIN 8
+#define BELL_ACTIVE_PIN_SIGNAL LOW
+
 class OutputProcessor
 {
 private:
 public:
     virtual void processOutput(AlarmOutput outputObj) = 0;
     virtual void processAlarmStatus(String statuses) = 0;
-    virtual void processBell(bool bellStatus) = 0;
+    void processBell(bool bellStatus);
     
     #ifdef ALARM_BEEPER_AVAILABLE
     static void beep(uint8_t repetition = 1, uint16_t repetitionDuration = BEEP_REPETITION_DURATION, uint16_t duration = BEEP_DURATION);

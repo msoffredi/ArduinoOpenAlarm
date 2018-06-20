@@ -16,3 +16,15 @@ void OutputProcessor::beep(uint8_t repetition, uint16_t repetitionDuration, uint
     }
 }
 #endif
+
+void OutputProcessor::processBell(bool bellStatus)
+{
+    if (bellStatus)
+    {
+        digitalWrite(BELL_PIN, BELL_ACTIVE_PIN_SIGNAL);
+    }
+    else
+    {
+        digitalWrite(BELL_PIN, !BELL_ACTIVE_PIN_SIGNAL);
+    }
+}
