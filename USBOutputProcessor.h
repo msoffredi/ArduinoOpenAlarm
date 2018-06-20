@@ -17,7 +17,6 @@ private:
 public:
     void processOutput(AlarmOutput outputObj);
     void processAlarmStatus(String statuses);
-    void processBell(bool bellStatus);
     
 };
 
