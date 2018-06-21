@@ -33,10 +33,13 @@ private:
     uint8_t operationMode;
     bool bell;
     EEPROMHandler* eeprom;
+    unsigned long armedTime;
+    bool delayedArmBeep;
     
     bool checkWiredSensorsActive();
     bool checkWirelessSensorsActive();
     void initSensors();
+    void delayedArmBeeping();
     
 public:
     Alarm(EEPROMHandler* eeprom);

@@ -582,10 +582,6 @@ void DisarmedMode::arm(AlarmCommand* commandObj)
         {
             this->alarm->setStatus(ALARM_STATUS_ARMED);
             
-            #ifdef ALARM_BEEPER_AVAILABLE
-            OutputProcessor::beep(5);
-            #endif
-            
             this->outProcessor->processOutput(
                     AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_ARMED)))
                     );
