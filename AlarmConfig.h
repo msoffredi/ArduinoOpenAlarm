@@ -21,5 +21,9 @@ const uint8_t pinBlacklist[] = {0, 1, 2, 7, 8};
 // comment this line to save flash space.
 #define ALARM_BEEPER_AVAILABLE
 
+// Time the alarm will wait before checking sensors after being armed
+// Set to 0 if you don't want a grace period. Defaults to 20 seconds
+#define ALARM_ARM_GRACE_PERIOD_TIME 20000
+
 #endif /* ALARMCONFIG_H */
 

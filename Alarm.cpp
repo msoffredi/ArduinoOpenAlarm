@@ -1,4 +1,5 @@
 #include "Alarm.h"
+#include "OutputProcessor.h"
 
 Alarm::Alarm(EEPROMHandler* eeprom)
 {
@@ -7,6 +8,7 @@ Alarm::Alarm(EEPROMHandler* eeprom)
     this->operationMode = ALARM_OPERATION_MODE_USER;
     this->bell = false;
     this->eeprom = eeprom;
+    this->armedTime = millis()-ALARM_ARM_GRACE_PERIOD_TIME;
     
     this->initSensors();
 }
@@ -61,6 +63,12 @@ uint8_t Alarm::getStatus()
 void Alarm::setStatus(uint8_t status)
 {
     this->status = status;
+    
+    if (status == ALARM_STATUS_ARMED)
+    {
+        this->armedTime = millis();
+        this->delayedArmBeep = false;
+    }
 }
 
 uint8_t Alarm::getNumSensors()
@@ -84,19 +92,41 @@ void Alarm::loop()
 {
     bool ringBell = false;
     
-    if (this->checkWiredSensorsActive())
+    if (millis()-this->armedTime > ALARM_ARM_GRACE_PERIOD_TIME)
     {
-        ringBell = true;
-    }
-    
-    if (this->checkWirelessSensorsActive())
-    {
-        ringBell = true;
-    }
+        if (this->checkWiredSensorsActive())
+        {
+            ringBell = true;
+        }
 
-    if (ringBell && this->getStatus() == ALARM_STATUS_ARMED && !this->bell)
+        if (this->checkWirelessSensorsActive())
+        {
+            ringBell = true;
+        }
+        
+        if (ringBell && this->getStatus() == ALARM_STATUS_ARMED && !this->bell)
+        {
+            this->bell = true;
+        }
+    }
+    else
     {
-        this->bell = true;
+        this->delayedArmBeeping();
+    }
+}
+
+void Alarm::delayedArmBeeping()
+{
+    unsigned long now = (unsigned long)(millis()/1000);
+    
+    if (now%2 == 1 && !this->delayedArmBeep)
+    {
+        OutputProcessor::beep(1, 0, 100);
+        this->delayedArmBeep = true;
+    }
+    else if (now%2 == 0 && this->delayedArmBeep)
+    {
+        this->delayedArmBeep = false;
     }
 }
 

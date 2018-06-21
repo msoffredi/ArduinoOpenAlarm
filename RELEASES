@@ -6,6 +6,7 @@ FEATURES
 * Added concept of beeper. If available, added beeper to some commands and 
 keypad input
 * Added concept of external bell/siren attached to an Arduino pin
+* Added concept of grace period of time when arming the alarm
 
 Version 0.1.2 (released)
 =========================
