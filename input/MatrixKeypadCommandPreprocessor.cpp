@@ -13,9 +13,7 @@ AlarmCommand MatrixKeypadCommandPreprocessor::getNextCommand()
     
     if (key != NO_KEY)
     {
-        #ifdef ALARM_BEEPER_AVAILABLE
         OutputProcessor::beep();
-        #endif
         
         if (key == '#')
         {

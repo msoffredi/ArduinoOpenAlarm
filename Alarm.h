@@ -43,6 +43,7 @@ private:
     bool checkWirelessSensorsActive();
     void initSensors();
     void delayedArmBeeping();
+    void delayedSensorBeepingOff();
     
 public:
     Alarm(EEPROMHandler* eeprom);

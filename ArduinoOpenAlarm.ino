@@ -35,12 +35,10 @@ void setup()
     
     outP.processOutput(AlarmOutput(ALARM_OUTPUT_TEXT, F(TEXT_INIT_DONE)));
 
-    #ifdef ALARM_BEEPER_AVAILABLE
     pinMode(BEEPER_PIN, OUTPUT);
     OutputProcessor::beep();
     delay(500);
     OutputProcessor::beep(2);
-    #endif
 }
 
 void loop() 

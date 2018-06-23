@@ -10,9 +10,8 @@ Alarm::Alarm(EEPROMHandler* eeprom)
     this->eeprom = eeprom;
     this->armedTime = millis()-ALARM_ARM_GRACE_PERIOD_TIME;
     this->delayedSensorIndex = 0;
-    this->delayedSensorActive = false;
-    this->delayedSensorActiveTime = millis()-ALARM_DISARM_GRACE_PERIOD_TIME;
-    
+
+    this->delayedSensorBeepingOff();
     this->initSensors();
 }
 
@@ -75,6 +74,17 @@ void Alarm::setStatus(uint8_t status)
         this->delayedArmBeep = false;
         this->delayedSensorActive = false;
     }
+    else
+    {
+        this->delayedSensorBeepingOff();
+    }
+}
+
+void Alarm::delayedSensorBeepingOff()
+{
+    this->delayedSensorActive = false;
+    this->delayedSensorActiveTime = millis()-ALARM_DISARM_GRACE_PERIOD_TIME;
+    digitalWrite(BEEPER_PIN, !BEEPER_ACTIVE_PIN_SIGNAL);
 }
 
 uint8_t Alarm::getNumSensors()
@@ -161,7 +171,10 @@ bool Alarm::checkWirelessSensorsActive()
                 {
                     if (this->sensors[x].getSensorID() == ID)
                     {
-                        if (!this->bell && this->delayedSensorIndex == x+1 && !this->delayedSensorActive)
+                        if (this->status == ALARM_STATUS_ARMED
+                                && !this->bell 
+                                && this->delayedSensorIndex == x+1 
+                                && !this->delayedSensorActive)
                         {
                             this->delayedSensorActive = true;
                             this->delayedSensorActiveTime = millis();
@@ -196,7 +209,10 @@ bool Alarm::checkWiredSensorsActive()
         {
             if (digitalRead(this->sensors[x].getSensorPin()))
             {
-                if (!this->bell && this->delayedSensorIndex == x+1 && !this->delayedSensorActive)
+                if (this->status == ALARM_STATUS_ARMED 
+                        && !this->bell 
+                        && this->delayedSensorIndex == x+1 
+                        && !this->delayedSensorActive)
                 {
                     this->delayedSensorActive = true;
                     this->delayedSensorActiveTime = millis();

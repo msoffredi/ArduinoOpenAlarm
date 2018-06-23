@@ -143,15 +143,24 @@ void DisarmedMode::setSensorAsDelayed(AlarmCommand* commandObj)
 {
     uint8_t idx = commandObj->getParameter(1).toInt();
     
-    if (idx > 0 && idx <= this->alarm->getNumSensors())
+    // 0 would mean no delayed sensor
+    if (idx >= 0 && idx <= this->alarm->getNumSensors())
     {
         this->alarm->setDelayedSensor(idx);
         
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NEW_DELAYED)) + idx)
+                );
+
         delay(200);
         OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
     }
     else
     {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_INVALID)))
+                );
+        
         OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
     }
 }
@@ -275,7 +284,7 @@ void DisarmedMode::listSensors()
                         + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
                         + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
                         + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
-                        + (this->alarm->getDelayedSensorIndex() == x) ? " D" : ""
+                        + ((this->alarm->getDelayedSensorIndex() == x) ? " D" : "")
                         )
                     );
         }
