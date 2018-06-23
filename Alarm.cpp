@@ -9,6 +9,9 @@ Alarm::Alarm(EEPROMHandler* eeprom)
     this->bell = false;
     this->eeprom = eeprom;
     this->armedTime = millis()-ALARM_ARM_GRACE_PERIOD_TIME;
+    this->delayedSensorIndex = 0;
+    this->delayedSensorActive = false;
+    this->delayedSensorActiveTime = millis()-ALARM_DISARM_GRACE_PERIOD_TIME;
     
     this->initSensors();
 }
@@ -23,6 +26,7 @@ void Alarm::initSensors()
     {
         EEPROM.get(EEPROM_NUMSENSORS_ADDR, this->numSensors);
         EEPROM.get(EEPROM_SENSORS_ADDR, this->sensors);
+        EEPROM.get(EEPROM_DELAYED_SENSOR, this->delayedSensorIndex);
     }    
     
     for (int x=0; x<this->numSensors; x++)
@@ -38,6 +42,7 @@ void Alarm::writeToEEPROM()
 {
     EEPROM.put(EEPROM_NUMSENSORS_ADDR, this->numSensors);
     EEPROM.put(EEPROM_SENSORS_ADDR, this->sensors);
+    EEPROM.put(EEPROM_DELAYED_SENSOR, this->delayedSensorIndex);
 }
 
 uint8_t Alarm::addSensor(Sensor sensor) 
@@ -68,6 +73,7 @@ void Alarm::setStatus(uint8_t status)
     {
         this->armedTime = millis();
         this->delayedArmBeep = false;
+        this->delayedSensorActive = false;
     }
 }
 
@@ -94,12 +100,14 @@ void Alarm::loop()
     
     if (millis()-this->armedTime > ALARM_ARM_GRACE_PERIOD_TIME)
     {
-        if (this->checkWiredSensorsActive())
+        if (this->checkWiredSensorsActive() 
+                && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))
         {
             ringBell = true;
         }
 
-        if (this->checkWirelessSensorsActive())
+        if (this->checkWirelessSensorsActive()
+                && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))
         {
             ringBell = true;
         }
@@ -147,19 +155,26 @@ bool Alarm::checkWirelessSensorsActive()
 
         if (ID != "")
         {
-            for (int x=1; x<=this->numSensors; x++)
+            for (int x=0; x<this->numSensors; x++)
             {
-                if (this->sensors[x-1].isOn() && this->sensors[x-1].isWireless())
+                if (this->sensors[x].isOn() && this->sensors[x].isWireless())
                 {
-                    if (this->sensors[x-1].getSensorID() == ID)
+                    if (this->sensors[x].getSensorID() == ID)
                     {
-                        this->sensors[x-1].setActive(true);
+                        if (!this->bell && this->delayedSensorIndex == x+1 && !this->delayedSensorActive)
+                        {
+                            this->delayedSensorActive = true;
+                            this->delayedSensorActiveTime = millis();
+                            digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+                        }
+                            
+                        this->sensors[x].setActive(true);
                         returnValue = true;
                         break;
                     }
-                    else if (this->sensors[x-1].getSensorInactiveID() == ID)
+                    else if (this->sensors[x].getSensorInactiveID() == ID)
                     {
-                        this->sensors[x-1].setActive(false);
+                        this->sensors[x].setActive(false);
                         break;
                     }
                 }
@@ -175,19 +190,26 @@ bool Alarm::checkWiredSensorsActive()
 {
     bool returnValue = false;
     
-    for (int x=1; x<=this->numSensors; x++)
+    for (int x=0; x<this->numSensors; x++)
     {
-        if (this->sensors[x-1].isOn() && !(this->sensors[x-1].isWireless()))
+        if (this->sensors[x].isOn() && !(this->sensors[x].isWireless()))
         {
-            if (digitalRead(this->sensors[x-1].getSensorPin()))
+            if (digitalRead(this->sensors[x].getSensorPin()))
             {
-                this->sensors[x-1].setActive(true);
+                if (!this->bell && this->delayedSensorIndex == x+1 && !this->delayedSensorActive)
+                {
+                    this->delayedSensorActive = true;
+                    this->delayedSensorActiveTime = millis();
+                    digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+                }
+                
+                this->sensors[x].setActive(true);
                 returnValue = true;
                 break;
             }
             else
             {
-                this->sensors[x-1].setActive(false);
+                this->sensors[x].setActive(false);
             }
         }
     }
@@ -256,4 +278,21 @@ bool Alarm::isFreePin(uint8_t pin)
     }
     
     return isFree;
+}
+
+/*
+ * 1 based index of the sensor we need to mark as delayed sensor
+ */
+void Alarm::setDelayedSensor(uint8_t index)
+{
+    this->delayedSensorIndex = index;
+    this->writeToEEPROM();
+}
+
+/*
+ * Get delayed sensor index in a 1 based index
+ */
+uint8_t Alarm::getDelayedSensorIndex()
+{
+    return this->delayedSensorIndex;
 }

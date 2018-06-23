@@ -1,6 +1,5 @@
 #include "OutputProcessor.h"
 
-#ifdef ALARM_BEEPER_AVAILABLE
 void OutputProcessor::beep(uint8_t repetition, uint16_t repetitionDuration, uint16_t duration)
 {
     for (uint8_t x=0; x<repetition; x++)
@@ -15,7 +14,6 @@ void OutputProcessor::beep(uint8_t repetition, uint16_t repetitionDuration, uint
         }
     }
 }
-#endif
 
 void OutputProcessor::processBell(bool bellStatus)
 {

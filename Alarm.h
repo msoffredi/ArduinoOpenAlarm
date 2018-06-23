@@ -35,6 +35,9 @@ private:
     EEPROMHandler* eeprom;
     unsigned long armedTime;
     bool delayedArmBeep;
+    uint8_t delayedSensorIndex;
+    bool delayedSensorActive;
+    unsigned long delayedSensorActiveTime;
     
     bool checkWiredSensorsActive();
     bool checkWirelessSensorsActive();
@@ -57,6 +60,8 @@ public:
     bool noSensorsActive();
     bool isFreePin(uint8_t pin);
     void writeToEEPROM();
+    void setDelayedSensor(uint8_t index);
+    uint8_t getDelayedSensorIndex();
     
 };
 

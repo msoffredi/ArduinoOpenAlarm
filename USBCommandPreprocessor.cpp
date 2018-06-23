@@ -80,6 +80,11 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_SENSOR_ON);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_SENSOR_DELAYED))
+        {
+            commandObj.setCommand(ALARM_COMMAND_SENSOR_DELAYED);
+            this->extractParameters(serialInput, &commandObj);
+        }
         else if (this->stringIsNumeric(command))
         {
             commandObj.setCommand(ALARM_COMMAND_NUMERIC_CODE);
