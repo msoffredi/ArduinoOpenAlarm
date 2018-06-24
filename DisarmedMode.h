@@ -43,6 +43,7 @@ private:
     void changeAdminCode(AlarmCommand* commandObj);
     void sensorOnOff(AlarmCommand* commandObj, bool power);
     void exitAdmin();
+    void setSensorAsDelayed(AlarmCommand* commandObj);
     
 protected:
     void arm(AlarmCommand* commandObj);

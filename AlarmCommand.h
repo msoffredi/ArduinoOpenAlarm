@@ -9,7 +9,10 @@
  #endif 
 #endif
  
+// Code 0 is reserved for no command
 #define ALARM_COMMAND_NONE 0
+
+// Available commands by code
 #define ALARM_COMMAND_VERSION 1
 #define ALARM_COMMAND_LIST_SENSORS 2
 #define ALARM_COMMAND_ALARM_STATUS 3
@@ -26,7 +29,9 @@
 #define ALARM_COMMAND_NUMERIC_CODE 14
 #define ALARM_COMMAND_SENSOR_OFF 15
 #define ALARM_COMMAND_SENSOR_ON 16
+#define ALARM_COMMAND_SENSOR_DELAYED 17
 
+// Maximum number of parameters we can handle
 #define MAX_COMMAND_PARAMETERS 10
 
 class AlarmCommand

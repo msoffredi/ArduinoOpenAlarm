@@ -17,13 +17,13 @@
 // List all reserved pins you don't want assigned to sensors
 const uint8_t pinBlacklist[] = {0, 1, 2, 7, 8};
 
-// If you don't have a beeper (buzzer with driver connected to a pin) you can
-// comment this line to save flash space.
-#define ALARM_BEEPER_AVAILABLE
-
 // Time the alarm will wait before checking sensors after being armed
 // Set to 0 if you don't want a grace period. Defaults to 20 seconds
 #define ALARM_ARM_GRACE_PERIOD_TIME 20000
+
+// When a delayed sensor is configured, this is the time the alarm will wait
+// if the sensor is activated before triggering the bell/siren
+#define ALARM_DISARM_GRACE_PERIOD_TIME 20000
 
 #endif /* ALARMCONFIG_H */
 

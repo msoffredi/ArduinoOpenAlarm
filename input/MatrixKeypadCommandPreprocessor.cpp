@@ -13,9 +13,7 @@ AlarmCommand MatrixKeypadCommandPreprocessor::getNextCommand()
     
     if (key != NO_KEY)
     {
-        #ifdef ALARM_BEEPER_AVAILABLE
         OutputProcessor::beep();
-        #endif
         
         if (key == '#')
         {
@@ -80,6 +78,11 @@ AlarmCommand MatrixKeypadCommandPreprocessor::getNextCommand()
             else if (command == F(USB_ALARM_COMMAND_SENSOR_ON))
             {
                 commandObj.setCommand(ALARM_COMMAND_SENSOR_ON);
+                this->extractParameters(this->nextCommand, &commandObj);
+            }
+            else if (command == F(USB_ALARM_COMMAND_SENSOR_DELAYED))
+            {
+                commandObj.setCommand(ALARM_COMMAND_SENSOR_DELAYED);
                 this->extractParameters(this->nextCommand, &commandObj);
             }
             else if (this->stringIsNumeric(command))

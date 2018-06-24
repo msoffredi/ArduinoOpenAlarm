@@ -13,9 +13,10 @@
 #define EEPROM_VERSION_LEN 10
 
 #define EEPROM_NUMSENSORS_ADDR 10
-#define EEPROM_USER_CODE 11
-#define EEPROM_ADMIN_CODE 13
-// 15-39 = 24 free bytes with fixed address available
+#define EEPROM_USER_CODE 11 // 2 bytes
+#define EEPROM_ADMIN_CODE 13 // 2 bytes
+#define EEPROM_DELAYED_SENSOR 15
+// 16-39 = 23 free bytes with fixed address available
 #define EEPROM_SENSORS_ADDR 40
 
 #define MESSAGE_NONE 0
