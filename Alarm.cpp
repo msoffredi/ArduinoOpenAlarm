@@ -115,6 +115,12 @@ void Alarm::loop()
         {
             ringBell = true;
         }
+        else
+        {
+            Serial.print(millis());
+            Serial.print(" - ");
+            Serial.println(this->delayedSensorActiveTime);
+        }
 
         if (this->checkWirelessSensorsActive()
                 && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))
@@ -169,7 +175,8 @@ bool Alarm::checkWirelessSensorsActive()
             {
                 if (this->sensors[x].isOn() && this->sensors[x].isWireless())
                 {
-                    if (this->sensors[x].getSensorID() == ID)
+                    if (this->sensors[x].getSensorID() == ID 
+                            || (this->delayedSensorActive && this->delayedSensorIndex == x+1))
                     {
                         if (this->status == ALARM_STATUS_ARMED
                                 && !this->bell 
@@ -185,7 +192,9 @@ bool Alarm::checkWirelessSensorsActive()
                         returnValue = true;
                         break;
                     }
-                    else if (this->sensors[x].getSensorInactiveID() == ID)
+                    else if (!this->bell 
+                            && (this->delayedSensorIndex != x+1 || !this->delayedSensorActive)
+                            && this->sensors[x].getSensorInactiveID() == ID)
                     {
                         this->sensors[x].setActive(false);
                         break;
@@ -207,7 +216,8 @@ bool Alarm::checkWiredSensorsActive()
     {
         if (this->sensors[x].isOn() && !(this->sensors[x].isWireless()))
         {
-            if (digitalRead(this->sensors[x].getSensorPin()))
+            if (digitalRead(this->sensors[x].getSensorPin()) 
+                    || (this->delayedSensorActive && this->delayedSensorIndex == x+1))
             {
                 if (this->status == ALARM_STATUS_ARMED 
                         && !this->bell 
@@ -223,7 +233,8 @@ bool Alarm::checkWiredSensorsActive()
                 returnValue = true;
                 break;
             }
-            else
+            else if (!this->bell 
+                    && (this->delayedSensorIndex != x+1 || !this->delayedSensorActive))
             {
                 this->sensors[x].setActive(false);
             }
