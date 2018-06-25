@@ -49,5 +49,10 @@ const uint8_t pinBlacklist[] = {0, 1, 2, 7, 8};
 // enabled pin.
 #define RF_RECEIVE_PIN 2
 
+// Maximum failures entering admin code before suspension
+#define ADMIN_CODE_FAILURES_MAX 3
+// Admin mode will be blocked for this number of milliseconds
+#define ADMIN_CODE_FAILURES_SUSPEND_TIME 20000
+
 #endif /* ALARMCONFIG_H */
 
