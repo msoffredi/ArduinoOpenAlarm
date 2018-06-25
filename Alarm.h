@@ -9,11 +9,10 @@
  #endif 
 #endif
  
+#include "AlarmConfig.h"
 #include "Sensor.h"
 #include "EEPROMHandler.h"
 #include "WirelessRF.h"
-
-#define MAX_SENSORS 10
 
 #define ALARM_STATUS_DISARMED 0
 #define ALARM_STATUS_ARMED 1

@@ -14,18 +14,6 @@
 #include "Alarm.h"
 #include "Language.h"
 
-// Beeper related constants
-#define BEEPER_PIN 7
-#define BEEPER_ACTIVE_PIN_SIGNAL LOW
-#define BEEP_DURATION 30
-#define BEEP_REPETITION_DURATION 100
-#define BEEP_COMMAND_ERROR_DURATION 500
-#define BEEP_COMMAND_ACCEPTED_REPETITIONS 3
-
-// Bell related constants
-#define BELL_PIN 8
-#define BELL_ACTIVE_PIN_SIGNAL LOW
-
 class OutputProcessor
 {
 private:
