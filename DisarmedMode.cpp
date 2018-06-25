@@ -6,6 +6,8 @@ DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProc
     this->commandPreprocessor = commPP;
     this->outProcessor = outP;
     this->eeprom = eeprom;
+    this->adminCodeFailures = 0;
+    this->adminCodeFailureTime = millis()-ADMIN_CODE_FAILURES_SUSPEND_TIME;
     
     this->initUserAndAdminCodes();
 }
@@ -248,19 +250,32 @@ void DisarmedMode::enterAdminMode(AlarmCommand* commandObj)
 {
     String code = commandObj->getParameter(1);
     
-    if (code.toInt() == this->adminCode)
+    // We verify if the admin mode is suspended for too many failures
+    if (this->adminCodeFailures < ADMIN_CODE_FAILURES_MAX 
+            || millis()-this->adminCodeFailureTime > ADMIN_CODE_FAILURES_SUSPEND_TIME)
     {
-        this->alarm->setOperationMode(ALARM_OPERATION_MODE_ADMIN);
-        this->outProcessor->processOutput(
-                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ENTER_ADMIN_MODE)))
-                );
+        if (this->adminCodeFailures == ADMIN_CODE_FAILURES_MAX)
+        {
+            this->adminCodeFailures = 0;
+        }
         
-        delay(200);
-        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
-    }
-    else
-    {
-        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+        if (code.toInt() == this->adminCode)
+        {
+            this->adminCodeFailures = 0;
+            this->alarm->setOperationMode(ALARM_OPERATION_MODE_ADMIN);
+            this->outProcessor->processOutput(
+                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ENTER_ADMIN_MODE)))
+                    );
+
+            delay(200);
+            OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+        }
+        else
+        {
+            OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+            this->adminCodeFailures++;
+            this->adminCodeFailureTime = millis();
+        }
     }
 }
 

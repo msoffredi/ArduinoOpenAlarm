@@ -26,6 +26,8 @@ private:
     uint16_t userCode;
     uint16_t adminCode;
     EEPROMHandler* eeprom;
+    uint8_t adminCodeFailures;
+    unsigned long adminCodeFailureTime;
             
     void processCommand(AlarmCommand command);
     void listSensors();

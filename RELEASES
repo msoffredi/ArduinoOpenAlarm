@@ -9,6 +9,7 @@ keypad input
 * Added concept of grace period of time when arming the alarm
 * Added concept of delayed sensor with a grace period of time on disarm
 * Moved configuration constants to ArduinoConfig.h
+* Admin access blocked for a period of time after failing admin code 3 times
 
 Version 0.1.2 (released)
 =========================

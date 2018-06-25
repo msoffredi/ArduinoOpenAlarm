@@ -12,6 +12,7 @@ This project requires RCSwitch library and can be found here: [https://github.co
 - /doc/ - Documentation
 - /languages/ - Texts translated to other languages
 - /output/ - Alternative output options (LCD displays for example)
+- /input/ - Alternative input options (Keypads for example)
 
 
 ## Features list for next versions
