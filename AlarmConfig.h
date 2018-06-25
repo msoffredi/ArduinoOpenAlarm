@@ -25,5 +25,29 @@ const uint8_t pinBlacklist[] = {0, 1, 2, 7, 8};
 // if the sensor is activated before triggering the bell/siren
 #define ALARM_DISARM_GRACE_PERIOD_TIME 20000
 
+// Maximum number of sensors the alarm can manage
+// NOTE: Increasing this constant results in MORE MEMORY REQUIRED
+#define MAX_SENSORS 10
+
+// Beeper related constants
+#define BEEPER_PIN 7
+#define BEEPER_ACTIVE_PIN_SIGNAL LOW
+#define BEEP_DURATION 30
+#define BEEP_REPETITION_DURATION 100
+#define BEEP_COMMAND_ERROR_DURATION 500
+#define BEEP_COMMAND_ACCEPTED_REPETITIONS 3
+
+// Bell related constants
+#define BELL_PIN 8
+#define BELL_ACTIVE_PIN_SIGNAL LOW
+
+// General RF Wireless sensors constants
+// Timeout in milliseconds for when we have to wait for communication to happen
+#define WAIT_RF_TIMEOUT 20000
+
+// Pin where the RF receiver will be connected to and has to be an interrupt 
+// enabled pin.
+#define RF_RECEIVE_PIN 2
+
 #endif /* ALARMCONFIG_H */
 

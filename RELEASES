@@ -8,6 +8,7 @@ keypad input
 * Added concept of external bell/siren attached to an Arduino pin
 * Added concept of grace period of time when arming the alarm
 * Added concept of delayed sensor with a grace period of time on disarm
+* Moved configuration constants to ArduinoConfig.h
 
 Version 0.1.2 (released)
 =========================

@@ -8,15 +8,9 @@
   #include <wiring.h>
  #endif 
 #endif
- 
+
+#include "AlarmConfig.h"
 #include <RCSwitch.h>
-
-// Timeout in milliseconds for when we have to wait for communication to happen
-#define WAIT_RF_TIMEOUT 20000
-
-// Pin where the RF receiver will be connected to and has to be an interrupt 
-// enabled pin.
-#define RF_RECEIVE_PIN 2
 
 class WirelessRF
 {
