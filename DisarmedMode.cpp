@@ -1,11 +1,8 @@
 #include "DisarmedMode.h"
 
-DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom)
+DisarmedMode::DisarmedMode(CommonAlarmSharedObjects* common)
 {
-    this->alarm = alarm;
-    this->commandPreprocessor = commPP;
-    this->outProcessor = outP;
-    this->eeprom = eeprom;
+    this->common = common;
     this->adminCodeFailures = 0;
     this->adminCodeFailureTime = millis()-ADMIN_CODE_FAILURES_SUSPEND_TIME;
     
@@ -14,7 +11,7 @@ DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProc
 
 void DisarmedMode::initUserAndAdminCodes()
 {
-    if (this->eeprom->isFirstTime())
+    if (this->common->eeprom->isFirstTime())
     {
         this->userCode = DEFAULT_USER_CODE;
         this->adminCode = DEFAULT_ADMIN_CODE;
@@ -36,7 +33,7 @@ void DisarmedMode::writeToEEPROM()
 
 void DisarmedMode::loop()
 {
-    AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
+    AlarmCommand commandObj = this->common->commPP->getNextCommand();
     
     if (commandObj.getCommand() != ALARM_COMMAND_NONE)
     {
@@ -49,16 +46,16 @@ void DisarmedMode::loop()
 
 void DisarmedMode::processAlarmStatus()
 {
-    if (this->alarm->getNumSensors())
+    if (this->common->alarm->getNumSensors())
     {
         String statuses = "";
         
-        for (int x=1; x<=this->alarm->getNumSensors(); x++)
+        for (int x=1; x<=this->common->alarm->getNumSensors(); x++)
         {
-            statuses += (this->alarm->getSensor(x)->isActive()) ? "1" : "0"; 
+            statuses += (this->common->alarm->getSensor(x)->isActive()) ? "1" : "0"; 
         }
         
-        this->outProcessor->processAlarmStatus(statuses);
+        this->common->outP->processAlarmStatus(statuses);
     }
 }
 
@@ -66,7 +63,7 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
 {
     uint8_t command = commandObj.getCommand();
     
-    if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
+    if (this->common->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
     {
         if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
         {
@@ -94,7 +91,7 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         }
         else if (command == ALARM_COMMAND_VERSION) 
         {
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
                     );
         }
@@ -119,7 +116,7 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
             this->changeAdminCode(&commandObj);
         }
     }
-    else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
+    else if (this->common->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
     {
         if (command == ALARM_COMMAND_ALARM_STATUS)
         {
@@ -146,11 +143,11 @@ void DisarmedMode::setSensorAsDelayed(AlarmCommand* commandObj)
     uint8_t idx = commandObj->getParameter(1).toInt();
     
     // 0 would mean no delayed sensor
-    if (idx >= 0 && idx <= this->alarm->getNumSensors())
+    if (idx >= 0 && idx <= this->common->alarm->getNumSensors())
     {
-        this->alarm->setDelayedSensor(idx);
+        this->common->alarm->setDelayedSensor(idx);
         
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NEW_DELAYED)) + idx)
                 );
 
@@ -159,7 +156,7 @@ void DisarmedMode::setSensorAsDelayed(AlarmCommand* commandObj)
     }
     else
     {
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_INVALID)))
                 );
         
@@ -169,8 +166,8 @@ void DisarmedMode::setSensorAsDelayed(AlarmCommand* commandObj)
 
 void DisarmedMode::exitAdmin()
 {
-    this->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
-    this->outProcessor->processOutput(
+    this->common->alarm->setOperationMode(ALARM_OPERATION_MODE_USER);
+    this->common->outP->processOutput(
             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_EXIT_ADMIN_MODE)))
             );
 
@@ -183,13 +180,13 @@ void DisarmedMode::sensorOnOff(AlarmCommand* commandObj, bool power)
     uint8_t idx = commandObj->getParameter(1).toInt();
     
     if (idx > 0 
-            && idx <= this->alarm->getNumSensors() 
-            && this->alarm->getSensor(idx)->isOn() != power)
+            && idx <= this->common->alarm->getNumSensors() 
+            && this->common->alarm->getSensor(idx)->isOn() != power)
     {
-        this->alarm->getSensor(idx)->setPower(power);
-        this->alarm->writeToEEPROM();
+        this->common->alarm->getSensor(idx)->setPower(power);
+        this->common->alarm->writeToEEPROM();
         
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, 
                 String(F(TEXT_ADMIN_SENSOR_ON_OFF_1)) + idx + F(TEXT_ADMIN_SENSOR_ON_OFF_2) + ((power) ? "on" : "off"))
                 );
@@ -211,8 +208,8 @@ void DisarmedMode::changeUserCode(AlarmCommand* commandObj)
     {
         this->userCode = code.toInt();
         EEPROM.put(EEPROM_USER_CODE, this->userCode);
-        this->eeprom->setMessage(MESSAGE_READ_USER_CODE);
-        this->outProcessor->processOutput(
+        this->common->eeprom->setMessage(MESSAGE_READ_USER_CODE);
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_USER_CODE_CHANGED)) + code.toInt())
                 );
         
@@ -233,7 +230,7 @@ void DisarmedMode::changeAdminCode(AlarmCommand* commandObj)
     {
         this->adminCode = code.toInt();
         EEPROM.put(EEPROM_ADMIN_CODE, this->adminCode);
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_ADMIN_CODE_CHANGED)) + code.toInt())
                 );
         
@@ -262,8 +259,8 @@ void DisarmedMode::enterAdminMode(AlarmCommand* commandObj)
         if (code.toInt() == this->adminCode)
         {
             this->adminCodeFailures = 0;
-            this->alarm->setOperationMode(ALARM_OPERATION_MODE_ADMIN);
-            this->outProcessor->processOutput(
+            this->common->alarm->setOperationMode(ALARM_OPERATION_MODE_ADMIN);
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ENTER_ADMIN_MODE)))
                     );
 
@@ -282,31 +279,31 @@ void DisarmedMode::enterAdminMode(AlarmCommand* commandObj)
 void DisarmedMode::listSensors()
 {
     Sensor* sensor;
-    uint8_t numSensors = this->alarm->getNumSensors();
+    uint8_t numSensors = this->common->alarm->getNumSensors();
             
     if (numSensors)
     {
         for (int x=1; x<=numSensors; x++)
         {
-            sensor = this->alarm->getSensor(x);
+            sensor = this->common->alarm->getSensor(x);
 
             // Wired: Sensor #<n>, status: {on/off}, Pin <p> [D]
             // Wireless: Sensor #<n>, ID <i>[, State 2 ID <i2>], status: {on/off} [D]
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + x 
                         + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
                         + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")
                         + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
                         + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
                         + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
-                        + ((this->alarm->getDelayedSensorIndex() == x) ? " D" : "")
+                        + ((this->common->alarm->getDelayedSensorIndex() == x) ? " D" : "")
                         )
                     );
         }
     }
     else
     {
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_NO_SENSORS)))
                 );
     }
@@ -314,7 +311,7 @@ void DisarmedMode::listSensors()
 
 void DisarmedMode::learnNewWirelessDevice()
 {
-    this->outProcessor->processOutput(
+    this->common->outP->processOutput(
             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING)))
             );
 
@@ -331,9 +328,9 @@ void DisarmedMode::learnNewWirelessDevice()
             sensor.setPower(true);
             sensor.setWireless(true);
 
-            sensorNumber = this->alarm->addSensor(sensor);
+            sensorNumber = this->common->alarm->addSensor(sensor);
 
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_ADDED)) 
                         + String(sensorNumber)
                         + F(TEXT_LIST_SENSORS_ID) + newID
@@ -345,7 +342,7 @@ void DisarmedMode::learnNewWirelessDevice()
         }
         else
         {
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                     );
             
@@ -354,7 +351,7 @@ void DisarmedMode::learnNewWirelessDevice()
     }
     else
     {
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                 );
         
@@ -364,7 +361,7 @@ void DisarmedMode::learnNewWirelessDevice()
 
 void DisarmedMode::learnNewTwoStatesWirelessDevice()
 {
-    this->outProcessor->processOutput(
+    this->common->outP->processOutput(
             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_1)))
             );
 
@@ -384,7 +381,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
             sensor.setTwoStates(true);
 
             delay(3000);
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_2)))
                     );
 
@@ -397,7 +394,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                     sensor.setSensorInactiveID(newID);
                     
                     delay(3000);
-                    this->outProcessor->processOutput(
+                    this->common->outP->processOutput(
                             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_LEARNING2_3)))
                             );
 
@@ -405,9 +402,9 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                     
                     if (newID == stateOneID)
                     {
-                        sensorNumber = this->alarm->addSensor(sensor);
+                        sensorNumber = this->common->alarm->addSensor(sensor);
 
-                        this->outProcessor->processOutput(
+                        this->common->outP->processOutput(
                                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_ADDED)) 
                                     + String(sensorNumber)
                                     + F(TEXT_LIST_SENSORS_ID) + newID
@@ -420,7 +417,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                     }
                     else
                     {
-                        this->outProcessor->processOutput(
+                        this->common->outP->processOutput(
                                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_S1_FAIL)))
                                 );
                         
@@ -429,7 +426,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
                 }
                 else
                 {
-                    this->outProcessor->processOutput(
+                    this->common->outP->processOutput(
                             AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                             );
                     
@@ -438,7 +435,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
             }
             else
             {
-                this->outProcessor->processOutput(
+                this->common->outP->processOutput(
                         AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                         );
                 
@@ -447,7 +444,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
         }
         else
         {
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_SENSOR_EXISTS)))
                     );
             
@@ -456,7 +453,7 @@ void DisarmedMode::learnNewTwoStatesWirelessDevice()
     }
     else
     {
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_WIRELESS_TIMEOUT_LEARNING)))
                 );
         
@@ -469,9 +466,9 @@ uint8_t DisarmedMode::sensorExistsInAlarm(String sensorID)
     bool returnValue = 0;
     Sensor* sensor;
     
-    for (int x=1; x<=this->alarm->getNumSensors(); x++)
+    for (int x=1; x<=this->common->alarm->getNumSensors(); x++)
     {
-        sensor = this->alarm->getSensor(x);
+        sensor = this->common->alarm->getSensor(x);
         
         if (sensor->getSensorID() == sensorID)
         {
@@ -493,14 +490,14 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
     {
         if (this->pinNotInBlacklist(pin.toInt()))
         {
-            if (this->alarm->isFreePin(pin.toInt()))
+            if (this->common->alarm->isFreePin(pin.toInt()))
             {
                 sensor.setPower(true);
                 sensor.setSensorPin(pin.toInt());
 
-                sensorNumber = this->alarm->addSensor(sensor);
+                sensorNumber = this->common->alarm->addSensor(sensor);
 
-                this->outProcessor->processOutput(
+                this->common->outP->processOutput(
                         AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_ADDED)) 
                             + String(sensorNumber)
                             + F(TEXT_SENSOR_ADDED_PIN) + pin.toInt()
@@ -514,7 +511,7 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
             }
             else
             {
-                this->outProcessor->processOutput(
+                this->common->outP->processOutput(
                         AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_USED_PIN)))
                         );
                 
@@ -523,7 +520,7 @@ void DisarmedMode::addSensor(AlarmCommand* commandObj)
         }
         else
         {
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_NOT_ADDED_BLACKLIST)))
                     );
             
@@ -552,11 +549,11 @@ void DisarmedMode::delSensor(AlarmCommand* commandObj)
 {
     uint8_t idx = commandObj->getParameter(1).toInt();
     
-    if (idx > 0 && idx <= this->alarm->getNumSensors())
+    if (idx > 0 && idx <= this->common->alarm->getNumSensors())
     {
-        this->alarm->delSensor(idx);
+        this->common->alarm->delSensor(idx);
 
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_DELETED)) + idx)
                 );
         
@@ -565,7 +562,7 @@ void DisarmedMode::delSensor(AlarmCommand* commandObj)
     }
     else
     {
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SENSOR_INVALID)) + idx)
                 );
         
@@ -580,11 +577,11 @@ void DisarmedMode::arm(AlarmCommand* commandObj)
     // TODO: add verification all sensors are inactive
     if (code.toInt() == this->userCode)
     {
-        if (this->alarm->noSensorsActive())
+        if (this->common->alarm->noSensorsActive())
         {
-            this->alarm->setStatus(ALARM_STATUS_ARMED);
+            this->common->alarm->setStatus(ALARM_STATUS_ARMED);
             
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_ARMED)))
                     );
             
@@ -593,7 +590,7 @@ void DisarmedMode::arm(AlarmCommand* commandObj)
         }
         else
         {
-            this->outProcessor->processOutput(
+            this->common->outP->processOutput(
                     AlarmOutput(ALARM_OUTPUT_ARM, String(F(TEXT_ALARM_NOT_ARMED_SENSORS_ACTIVE)))
                     );
             

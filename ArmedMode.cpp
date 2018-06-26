@@ -1,13 +1,10 @@
 #include "ArmedMode.h"
 
-ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom)
+ArmedMode::ArmedMode(CommonAlarmSharedObjects* common)
 {
-    this->alarm = alarm;
-    this->commandPreprocessor = commPP;
-    this->outProcessor = outP;
-    this->eeprom = eeprom;
+    this->common = common;
     
-    if (this->eeprom->isFirstTime())
+    if (this->common->eeprom->isFirstTime())
     {
         this->userCode = DEFAULT_USER_CODE;
     }
@@ -19,18 +16,18 @@ ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor*
 
 void ArmedMode::loop()
 {
-    if (this->eeprom->getMessage() == MESSAGE_READ_USER_CODE)
+    if (this->common->eeprom->getMessage() == MESSAGE_READ_USER_CODE)
     {
         EEPROM.get(EEPROM_USER_CODE, this->userCode);
-        this->eeprom->setMessage(MESSAGE_NONE);
+        this->common->eeprom->setMessage(MESSAGE_NONE);
     }
     
-    if (this->alarm->getBell())
+    if (this->common->alarm->getBell())
     {
         this->ringBell();
     }
     
-    AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
+    AlarmCommand commandObj = this->common->commPP->getNextCommand();
     
     if (commandObj.getCommand() != ALARM_COMMAND_NONE)
     {
@@ -40,7 +37,7 @@ void ArmedMode::loop()
 
 void ArmedMode::ringBell()
 {
-    this->outProcessor->processBell(ALARM_BELL_ON);
+    this->common->outP->processBell(ALARM_BELL_ON);
 }
 
 void ArmedMode::processCommand(AlarmCommand commandObj)
@@ -64,12 +61,12 @@ void ArmedMode::disarm(AlarmCommand* commandObj)
     
     if (code.toInt() == this->userCode)
     {
-        this->alarm->setBell(false);
-        this->outProcessor->processBell(ALARM_BELL_OFF);
+        this->common->alarm->setBell(false);
+        this->common->outP->processBell(ALARM_BELL_OFF);
         
-        this->alarm->setStatus(ALARM_STATUS_DISARMED);
+        this->common->alarm->setStatus(ALARM_STATUS_DISARMED);
         
-        this->outProcessor->processOutput(
+        this->common->outP->processOutput(
                 AlarmOutput(ALARM_OUTPUT_DISARM, String(F(TEXT_ALARM_DISARMED)))
                 );
         

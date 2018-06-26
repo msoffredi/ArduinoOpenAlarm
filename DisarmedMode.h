@@ -16,16 +16,14 @@
 #include "OutputProcessor.h"
 #include "Language.h"
 #include "EEPROMHandler.h"
+#include "AlarmCommon.h"
 
 class DisarmedMode
 {
 private:
-    Alarm* alarm;
-    CommandPreprocessor* commandPreprocessor;
-    OutputProcessor* outProcessor;
+    CommonAlarmSharedObjects *common;
     uint16_t userCode;
     uint16_t adminCode;
-    EEPROMHandler* eeprom;
     uint8_t adminCodeFailures;
     unsigned long adminCodeFailureTime;
             
@@ -51,7 +49,7 @@ protected:
     void arm(AlarmCommand* commandObj);
     
 public:
-    DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
+    DisarmedMode(CommonAlarmSharedObjects* common);
     void loop();
     
 };

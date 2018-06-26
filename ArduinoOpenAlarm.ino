@@ -16,11 +16,13 @@ USBOutputProcessor outP;
 #include "ArmedMode.h"
 #include "DisarmedMode.h"
 #include "EEPROMHandler.h"
+#include "AlarmCommon.h"
 
 EEPROMHandler eeprom;
 Alarm alarm(&eeprom);
-DisarmedMode dmode(&alarm, &commPP, &outP, &eeprom);
-ArmedMode amode(&alarm, &commPP, &outP, &eeprom);
+CommonAlarmSharedObjects common(&alarm, &commPP, &outP, &eeprom);
+DisarmedMode dmode(&common);
+ArmedMode amode(&common);
 
 void setup() 
 {

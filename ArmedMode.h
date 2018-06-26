@@ -15,16 +15,14 @@
 #include "OutputProcessor.h"
 #include "Language.h"
 #include "EEPROMHandler.h"
+#include "AlarmCommon.h"
 
 class ArmedMode
 {
 private:
-    Alarm* alarm;
-    CommandPreprocessor* commandPreprocessor;
-    OutputProcessor* outProcessor;
+    CommonAlarmSharedObjects *common;
     uint16_t userCode;
     bool bellTriggered;
-    EEPROMHandler* eeprom;
 
     void processCommand(AlarmCommand command);
     
@@ -33,7 +31,7 @@ protected:
     void ringBell();
     
 public:
-    ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor* outP, EEPROMHandler* eeprom);
+    ArmedMode(CommonAlarmSharedObjects* common);
     void loop();
     
 };
