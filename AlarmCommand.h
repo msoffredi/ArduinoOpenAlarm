@@ -30,6 +30,7 @@
 #define ALARM_COMMAND_SENSOR_OFF 15
 #define ALARM_COMMAND_SENSOR_ON 16
 #define ALARM_COMMAND_SENSOR_DELAYED 17
+#define ALARM_COMMAND_LIST_ONE_SENSOR 18
 
 // Maximum number of parameters we can handle
 #define MAX_COMMAND_PARAMETERS 10

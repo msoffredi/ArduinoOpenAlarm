@@ -118,6 +118,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->changeAdminCode(&commandObj);
         }
+        else if (command == ALARM_COMMAND_LIST_ONE_SENSOR) 
+        {
+            this->listOneSensor(&commandObj);
+        }
     }
     else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
     {
@@ -138,6 +142,36 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
             commandObj.setCommand(ALARM_COMMAND_ARM);
             this->arm(&commandObj);
         }
+    }
+}
+
+void DisarmedMode::listOneSensor(AlarmCommand* commandObj)
+{
+    Sensor* sensor;
+    uint8_t idx = commandObj->getParameter(1).toInt();
+
+    if (idx > 0 && idx <= this->alarm->getNumSensors())
+    {
+        sensor = this->alarm->getSensor(idx);
+
+        // Wired: Sensor #<n>, status: {on/off}, Pin <p> [D]
+        // Wireless: Sensor #<n>, ID <i>[, State 2 ID <i2>], status: {on/off} [D]
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + idx 
+                    + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
+                    + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")
+                    + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
+                    + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
+                    + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
+                    + ((this->alarm->getDelayedSensorIndex() == idx) ? " D" : "")
+                    )
+                );
+    }
+    else
+    {
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSOR_INVALID)))
+                );
     }
 }
 
@@ -281,27 +315,15 @@ void DisarmedMode::enterAdminMode(AlarmCommand* commandObj)
 
 void DisarmedMode::listSensors()
 {
-    Sensor* sensor;
+    AlarmCommand command;
     uint8_t numSensors = this->alarm->getNumSensors();
             
     if (numSensors)
     {
         for (int x=1; x<=numSensors; x++)
         {
-            sensor = this->alarm->getSensor(x);
-
-            // Wired: Sensor #<n>, status: {on/off}, Pin <p> [D]
-            // Wireless: Sensor #<n>, ID <i>[, State 2 ID <i2>], status: {on/off} [D]
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + x 
-                        + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
-                        + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")
-                        + F(TEXT_LIST_SENSORS_STATUS_TEXT) 
-                        + (sensor->isOn() ? F(TEXT_LIST_SENSORS_STATUS_ON) : F(TEXT_LIST_SENSORS_STATUS_OFF))
-                        + ((!sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_PIN)) + sensor->getSensorPin() : "")
-                        + ((this->alarm->getDelayedSensorIndex() == x) ? " D" : "")
-                        )
-                    );
+            command.setParameter(1, String(x));
+            this->listOneSensor(&command);
         }
     }
     else

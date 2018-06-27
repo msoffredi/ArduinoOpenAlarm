@@ -46,6 +46,7 @@ private:
     void sensorOnOff(AlarmCommand* commandObj, bool power);
     void exitAdmin();
     void setSensorAsDelayed(AlarmCommand* commandObj);
+    void listOneSensor(AlarmCommand* commandObj);
     
 protected:
     void arm(AlarmCommand* commandObj);
