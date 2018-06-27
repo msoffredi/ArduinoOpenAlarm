@@ -11,6 +11,7 @@
 #define TEXT_LIST_SENSORS_STATUS_ON "on"
 #define TEXT_LIST_SENSORS_STATUS_OFF "off"
 #define TEXT_LIST_SENSORS_NO_SENSORS "No hay sensores"
+#define TEXT_LIST_SENSOR_INVALID "Sensor invalido"
 
 #define TEXT_ALARM_STATUS "Estado Alarma: "
 #define TEXT_ALARM_ARMED "Alarma armada"

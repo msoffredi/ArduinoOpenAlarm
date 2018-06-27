@@ -16,6 +16,7 @@
 
 // Alarm related commands
 #define USB_ALARM_COMMAND_LIST_SENSORS "lists"
+#define USB_ALARM_COMMAND_LIST_ONE_SENSOR "list1"
 #define USB_ALARM_COMMAND_STATUS "status"
 #define USB_ALARM_COMMAND_ARM "arm"
 #define USB_ALARM_COMMAND_DISARM "disarm"
