@@ -98,12 +98,14 @@ class LCDOutputProcessor : public OutputProcessor, public LiquidCrystal
 {
 private:
     bool beginDone;
+    String mlBuffer;
     
     void outputText(String text);
     
 public:
     LCDOutputProcessor();
-    void processOutput(AlarmOutput outputObj);
+    void println(AlarmOutput outputObj);
+    void printml(AlarmOutput outputObj);
     void processAlarmStatus(String statuses);
     
 };

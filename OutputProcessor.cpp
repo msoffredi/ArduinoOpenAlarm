@@ -26,3 +26,8 @@ void OutputProcessor::processBell(bool bellStatus)
         digitalWrite(BELL_PIN, !BELL_ACTIVE_PIN_SIGNAL);
     }
 }
+
+void OutputProcessor::processOutput(AlarmOutput outputObj)
+{
+    this->println(outputObj);
+}

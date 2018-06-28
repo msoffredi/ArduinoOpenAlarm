@@ -1,6 +1,6 @@
 #include "USBOutputProcessor.h"
 
-void USBOutputProcessor::processOutput(AlarmOutput outputObj)
+void USBOutputProcessor::println(AlarmOutput outputObj)
 {
     uint8_t outputType = outputObj.getOutputType();
     
@@ -12,6 +12,11 @@ void USBOutputProcessor::processOutput(AlarmOutput outputObj)
             Serial.println(outputObj.getOutputText());
             break;            
     }
+}
+
+void USBOutputProcessor::printml(AlarmOutput outputObj)
+{
+    this->println(outputObj);
 }
 
 void USBOutputProcessor::processAlarmStatus(String statuses)
