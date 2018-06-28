@@ -84,6 +84,10 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
         {
             this->listSensors();
         }
+        else if (command == ALARM_COMMAND_NUMBER_SENSORS)
+        {
+            this->numberOfSensors();
+        }
         else if (command == ALARM_COMMAND_ADD_SENSOR)
         {
             this->addSensor(&commandObj);
@@ -143,6 +147,14 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
             this->arm(&commandObj);
         }
     }
+}
+
+void DisarmedMode::numberOfSensors()
+{
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_TEXT, 
+                String(F(TEXT_ALARM_NUMBER_SENSORS)) + this->alarm->getNumSensors())
+            );
 }
 
 void DisarmedMode::listOneSensor(AlarmCommand* commandObj)

@@ -30,6 +30,10 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
         {
             commandObj.setCommand(ALARM_COMMAND_ALARM_STATUS);
         }
+        else if (command == F(USB_ALARM_COMMAND_NUMBER_SENSORS))
+        {
+            commandObj.setCommand(ALARM_COMMAND_NUMBER_SENSORS);
+        }
         else if (command == F(USB_ALARM_COMMAND_ADD_SENSOR))
         {
             commandObj.setCommand(ALARM_COMMAND_ADD_SENSOR);
