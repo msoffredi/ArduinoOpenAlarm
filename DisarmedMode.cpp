@@ -68,81 +68,82 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
     
     if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_ADMIN)
     {
-        if (command == ALARM_COMMAND_EXIT_ADMIN_MODE)
+        switch (command)
         {
-            this->exitAdmin();
-        }
-        else if (command == ALARM_COMMAND_WIRELESS_LEARN) 
-        {
-            this->learnNewWirelessDevice();
-        }
-        else if (command == ALARM_COMMAND_WIRELESS_LEARN_2S) 
-        {
-            this->learnNewTwoStatesWirelessDevice();
-        }
-        else if (command == ALARM_COMMAND_LIST_SENSORS)
-        {
-            this->listSensors();
-        }
-        else if (command == ALARM_COMMAND_ADD_SENSOR)
-        {
-            this->addSensor(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_DEL_SENSOR)
-        {
-            this->delSensor(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_VERSION) 
-        {
-            this->outProcessor->processOutput(
-                    AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
-                    );
-        }
-        else if (command == ALARM_COMMAND_SENSOR_OFF) 
-        {
-            this->sensorOnOff(&commandObj, false);
-        }
-        else if (command == ALARM_COMMAND_SENSOR_ON) 
-        {
-            this->sensorOnOff(&commandObj, true);
-        }
-        else if (command == ALARM_COMMAND_SENSOR_DELAYED) 
-        {
-            this->setSensorAsDelayed(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_CHANGE_USER_CODE) 
-        {
-            this->changeUserCode(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_CHANGE_ADMIN_CODE) 
-        {
-            this->changeAdminCode(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_LIST_ONE_SENSOR) 
-        {
-            this->listOneSensor(&commandObj);
+            case ALARM_COMMAND_EXIT_ADMIN_MODE:
+                this->exitAdmin();
+                break;
+            case ALARM_COMMAND_WIRELESS_LEARN:
+                this->learnNewWirelessDevice();
+                break;
+            case ALARM_COMMAND_WIRELESS_LEARN_2S:
+                this->learnNewTwoStatesWirelessDevice();
+                break;
+            case ALARM_COMMAND_LIST_SENSORS:
+                this->listSensors();
+                break;
+            case ALARM_COMMAND_NUMBER_SENSORS:
+                this->numberOfSensors();
+                break;
+            case ALARM_COMMAND_ADD_SENSOR:
+                this->addSensor(&commandObj);
+                break;
+            case ALARM_COMMAND_DEL_SENSOR:
+                this->delSensor(&commandObj);
+                break;
+            case ALARM_COMMAND_VERSION:
+                this->outProcessor->processOutput(
+                        AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_SOFTWARE_VERSION)) + F(SOFTWARE_VERSION))
+                        );
+                break;
+            case ALARM_COMMAND_SENSOR_OFF:
+                this->sensorOnOff(&commandObj, false);
+                break;
+            case ALARM_COMMAND_SENSOR_ON:
+                this->sensorOnOff(&commandObj, true);
+                break;
+            case ALARM_COMMAND_SENSOR_DELAYED:
+                this->setSensorAsDelayed(&commandObj);
+                break;
+            case ALARM_COMMAND_CHANGE_USER_CODE:
+                this->changeUserCode(&commandObj);
+                break;
+            case ALARM_COMMAND_CHANGE_ADMIN_CODE:
+                this->changeAdminCode(&commandObj);
+                break;
+            case ALARM_COMMAND_LIST_ONE_SENSOR:
+                this->listOneSensor(&commandObj);
+                break;
         }
     }
     else if (this->alarm->getOperationMode() == ALARM_OPERATION_MODE_USER)
     {
-        if (command == ALARM_COMMAND_ALARM_STATUS)
+        switch (command)
         {
-            this->processAlarmStatus();
-        }
-        else if (command == ALARM_COMMAND_ARM)
-        {
-            this->arm(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_ENTER_ADMIN_MODE)
-        {
-            this->enterAdminMode(&commandObj);
-        }
-        else if (command == ALARM_COMMAND_NUMERIC_CODE)
-        {
-            commandObj.setCommand(ALARM_COMMAND_ARM);
-            this->arm(&commandObj);
+            case ALARM_COMMAND_ALARM_STATUS:
+                this->processAlarmStatus();
+                break;
+            case ALARM_COMMAND_ARM:
+                this->arm(&commandObj);
+                break;
+            case ALARM_COMMAND_ENTER_ADMIN_MODE:
+                this->enterAdminMode(&commandObj);
+                break;
+            case ALARM_COMMAND_NUMERIC_CODE:
+                commandObj.setCommand(ALARM_COMMAND_ARM);
+                this->arm(&commandObj);
+                break;
+            
         }
     }
+}
+
+void DisarmedMode::numberOfSensors()
+{
+    this->outProcessor->processOutput(
+            AlarmOutput(ALARM_OUTPUT_TEXT, 
+                String(F(TEXT_ALARM_NUMBER_SENSORS)) + this->alarm->getNumSensors())
+            );
 }
 
 void DisarmedMode::listOneSensor(AlarmCommand* commandObj)

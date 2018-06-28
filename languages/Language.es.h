@@ -17,6 +17,7 @@
 #define TEXT_ALARM_ARMED "Alarma armada"
 #define TEXT_ALARM_DISARMED "Alarma desarmada"
 #define TEXT_ALARM_NOT_ARMED_SENSORS_ACTIVE "Alarma no armada. Todos los sensores deben estar inactivos."
+#define TEXT_ALARM_NUMBER_SENSORS "Numero de sensores: "
 
 #define TEXT_SENSOR_ADDED "Sensor agregado. Sensor #"
 #define TEXT_SENSOR_ADDED_PIN ", conectado al pin "

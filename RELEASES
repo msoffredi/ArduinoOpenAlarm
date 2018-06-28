@@ -3,6 +3,7 @@ Version 0.1.4 (candidate)
 
 FEATURES
 * Added command to list just one sensor (specially designed for small displays)
+* Added command to get number of sensors in the alarm
 
 Version 0.1.3 (released)
 =========================

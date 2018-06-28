@@ -22,6 +22,7 @@
 #define USB_ALARM_COMMAND_DISARM "disarm"
 #define USB_ALARM_COMMAND_ENTER_ADMIN_MODE "admin"
 #define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "exit"
+#define USB_ALARM_COMMAND_NUMBER_SENSORS "nums"
 
 // Syntax: adds <pin>
 #define USB_ALARM_COMMAND_ADD_SENSOR "adds"
