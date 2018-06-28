@@ -157,7 +157,7 @@ void DisarmedMode::listOneSensor(AlarmCommand* commandObj)
 
         // Wired: Sensor #<n>, status: {on/off}, Pin <p> [D]
         // Wireless: Sensor #<n>, ID <i>[, State 2 ID <i2>], status: {on/off} [D]
-        this->outProcessor->processOutput(
+        this->outProcessor->printml(
                 AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_LIST_SENSORS_SENSOR_ROW)) + idx 
                     + ((sensor->isWireless()) ? String(F(TEXT_LIST_SENSORS_ID)) + sensor->getSensorID() : "")
                     + ((sensor->isTwoStates()) ? String(F(TEXT_LIST_SENSORS_S2_ID)) + sensor->getSensorInactiveID() : "")

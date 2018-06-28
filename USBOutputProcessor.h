@@ -15,7 +15,8 @@ class USBOutputProcessor : public OutputProcessor
 {
 private:
 public:
-    void processOutput(AlarmOutput outputObj);
+    void println(AlarmOutput outputObj);
+    void printml(AlarmOutput outputObj);
     void processAlarmStatus(String statuses);
     
 };

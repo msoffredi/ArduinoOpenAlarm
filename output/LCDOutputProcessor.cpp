@@ -9,9 +9,10 @@ LCDOutputProcessor::LCDOutputProcessor()
 #endif
 {
     this->beginDone = false;
+    this->mlBuffer = "";
 }
 
-void LCDOutputProcessor::processOutput(AlarmOutput outputObj)
+void LCDOutputProcessor::println(AlarmOutput outputObj)
 {
     if (!this->beginDone)
     {
@@ -37,6 +38,13 @@ void LCDOutputProcessor::processOutput(AlarmOutput outputObj)
             this->outputText(outputObj.getOutputText());
             break;            
     }
+}
+
+void LCDOutputProcessor::printml(AlarmOutput outputObj)
+{
+    // This can be refactored if we want to display multiple lines in a more
+    // human readable way (scrolling for example).
+    this->println(outputObj);
 }
 
 void LCDOutputProcessor::outputText(String text)

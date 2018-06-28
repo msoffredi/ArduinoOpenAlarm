@@ -18,7 +18,9 @@ class OutputProcessor
 {
 private:
 public:
-    virtual void processOutput(AlarmOutput outputObj) = 0;
+    void processOutput(AlarmOutput outputObj);
+    virtual void println(AlarmOutput outputObj) = 0;
+    virtual void printml(AlarmOutput outputObj) = 0;
     virtual void processAlarmStatus(String statuses) = 0;
     void processBell(bool bellStatus);  
     static void beep(uint8_t repetition = 1, uint16_t repetitionDuration = BEEP_REPETITION_DURATION, uint16_t duration = BEEP_DURATION);
