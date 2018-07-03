@@ -5,7 +5,7 @@ Open Source Arduino based Alarm.
 - Project related email: aoa@arduinohobby.com
 - Project founder: Marcelo Soffredi
 
-This project requires RCSwitch library and can be found here: [https://github.com/sui77/rc-switch/archive/master.zip](https://github.com/sui77/rc-switch/archive/master.zip)
+This project requires RCSwitch library and can be found here: [https://github.com/sui77/rc-switch/releases/latest](https://github.com/sui77/rc-switch/releases/latest)
 
 ## Folders content
 
