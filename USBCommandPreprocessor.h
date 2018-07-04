@@ -24,6 +24,10 @@
 #define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "exit"
 #define USB_ALARM_COMMAND_NUMBER_SENSORS "nums"
 
+// Syntax: reset <admin_code> yes
+#define USB_ALARM_COMMAND_FACTORY_RESET "reset"
+#define USB_ALARM_COMMAND_FACTORY_RESET_VERIFICATION "yes"
+
 // Syntax: adds <pin>
 #define USB_ALARM_COMMAND_ADD_SENSOR "adds"
 
@@ -48,7 +52,7 @@ private:
     String getCommandFromString(String usbString);
     void extractParameters(String serialInput, AlarmCommand* commandObj);
     bool stringIsNumeric(String var);
-    
+
 public:
     AlarmCommand getNextCommand();
     AlarmCommand getLastCommand();

@@ -49,4 +49,6 @@
 #define TEXT_ADMIN_SENSOR_ON_OFF_1 "Sensor "
 #define TEXT_ADMIN_SENSOR_ON_OFF_2 " was turned "
 
+#define TEXT_ADMIN_FACTORY_RESET_SUCCESSFUL "Factory reset successful!"
+
 #endif /* LANGUAGE_H */

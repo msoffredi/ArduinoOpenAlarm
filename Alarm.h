@@ -62,6 +62,7 @@ public:
     void writeToEEPROM();
     void setDelayedSensor(uint8_t index);
     uint8_t getDelayedSensorIndex();
+    void init();
     
 };
 

@@ -3,11 +3,17 @@
 
 Alarm::Alarm(EEPROMHandler* eeprom)
 {
+    this->eeprom = eeprom;
+    
+    this->init();
+}
+
+void Alarm::init()
+{
     this->numSensors = 0;
     this->status = ALARM_STATUS_DISARMED;
     this->operationMode = ALARM_OPERATION_MODE_USER;
     this->bell = false;
-    this->eeprom = eeprom;
     this->armedTime = millis()-ALARM_ARM_GRACE_PERIOD_TIME;
     this->delayedSensorIndex = 0;
 
@@ -115,12 +121,14 @@ void Alarm::loop()
         {
             ringBell = true;
         }
+        /*
         else
         {
             Serial.print(millis());
             Serial.print(" - ");
             Serial.println(this->delayedSensorActiveTime);
         }
+        */ 
 
         if (this->checkWirelessSensorsActive()
                 && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))

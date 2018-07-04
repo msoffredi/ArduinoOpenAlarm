@@ -6,6 +6,12 @@ DisarmedMode::DisarmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProc
     this->commandPreprocessor = commPP;
     this->outProcessor = outP;
     this->eeprom = eeprom;
+
+    this->init();
+}
+
+void DisarmedMode::init()
+{
     this->adminCodeFailures = 0;
     this->adminCodeFailureTime = millis()-ADMIN_CODE_FAILURES_SUSPEND_TIME;
     
@@ -32,6 +38,33 @@ void DisarmedMode::writeToEEPROM()
 {
     EEPROM.put(EEPROM_USER_CODE, this->userCode);
     EEPROM.put(EEPROM_ADMIN_CODE, this->adminCode);
+}
+
+void DisarmedMode::factoryReset(AlarmCommand* commandObj)
+{
+    uint16_t adminCode = commandObj->getParameter(1).toInt();
+    uint8_t verification = commandObj->getParameter(2).toInt();
+
+    if (adminCode == this->adminCode && verification)
+    {
+        char version[EEPROM_VERSION_LEN] = "";
+        EEPROM.put(EEPROM_VERSION_ADDR, version);
+
+        this->eeprom->init();
+        this->alarm->init();
+
+        this->init();
+        
+        this->outProcessor->processOutput(
+                AlarmOutput(ALARM_OUTPUT_TEXT, String(F(TEXT_ADMIN_FACTORY_RESET_SUCCESSFUL)))
+                );
+        delay(200);
+        OutputProcessor::beep(BEEP_COMMAND_ACCEPTED_REPETITIONS);
+    }
+    else
+    {
+        OutputProcessor::beep(1, 0, BEEP_COMMAND_ERROR_DURATION);
+    }
 }
 
 void DisarmedMode::loop()
@@ -113,6 +146,9 @@ void DisarmedMode::processCommand(AlarmCommand commandObj)
                 break;
             case ALARM_COMMAND_LIST_ONE_SENSOR:
                 this->listOneSensor(&commandObj);
+                break;
+            case ALARM_COMMAND_FACTORY_RESET:
+                this->factoryReset(&commandObj);
                 break;
         }
     }

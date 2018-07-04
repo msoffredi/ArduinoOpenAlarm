@@ -74,6 +74,9 @@
 #define USB_ALARM_COMMAND_EXIT_ADMIN_MODE "D"
 #define USB_ALARM_COMMAND_NUMBER_SENSORS "A12"
 
+// Syntax: C99*<admin_code>*1#
+#define USB_ALARM_COMMAND_FACTORY_RESET "C99"
+
 // Syntax: A2*<pin>#
 #define USB_ALARM_COMMAND_ADD_SENSOR "A2"
 

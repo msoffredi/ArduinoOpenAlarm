@@ -94,6 +94,11 @@ AlarmCommand MatrixKeypadCommandPreprocessor::getNextCommand()
                 commandObj.setCommand(ALARM_COMMAND_LIST_ONE_SENSOR);
                 this->extractParameters(this->nextCommand, &commandObj);
             }
+            else if (command == F(USB_ALARM_COMMAND_FACTORY_RESET))
+            {
+                commandObj.setCommand(ALARM_COMMAND_FACTORY_RESET);
+                this->extractParameters(this->nextCommand, &commandObj);
+            }
             else if (this->stringIsNumeric(command))
             {
                 commandObj.setCommand(ALARM_COMMAND_NUMERIC_CODE);

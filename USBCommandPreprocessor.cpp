@@ -94,6 +94,12 @@ AlarmCommand USBCommandPreprocessor::getNextCommand()
             commandObj.setCommand(ALARM_COMMAND_LIST_ONE_SENSOR);
             this->extractParameters(serialInput, &commandObj);
         }
+        else if (command == F(USB_ALARM_COMMAND_FACTORY_RESET))
+        {
+            commandObj.setCommand(ALARM_COMMAND_FACTORY_RESET);
+            this->extractParameters(serialInput, &commandObj);
+            commandObj.setParameter(2, ((commandObj.getParameter(2) == USB_ALARM_COMMAND_FACTORY_RESET_VERIFICATION) ? "1" : "0"));
+        }
         else if (this->stringIsNumeric(command))
         {
             commandObj.setCommand(ALARM_COMMAND_NUMERIC_CODE);
