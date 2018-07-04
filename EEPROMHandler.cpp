@@ -2,6 +2,11 @@
 
 EEPROMHandler::EEPROMHandler()
 {
+    this->init();
+}
+
+void EEPROMHandler::init()
+{
     this->message = MESSAGE_NONE;
             
     String eepromVersion = this->readVersion();

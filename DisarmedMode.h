@@ -48,6 +48,8 @@ private:
     void setSensorAsDelayed(AlarmCommand* commandObj);
     void listOneSensor(AlarmCommand* commandObj);
     void numberOfSensors();
+    void init();
+    void factoryReset(AlarmCommand* commandObj);
     
 protected:
     void arm(AlarmCommand* commandObj);

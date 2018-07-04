@@ -39,6 +39,7 @@ public:
     bool isFirstTime();
     void setMessage(uint8_t message);
     uint8_t getMessage();
+    void init();
         
 };
 

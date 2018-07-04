@@ -49,4 +49,6 @@
 #define TEXT_ADMIN_SENSOR_ON_OFF_1 "El sensor "
 #define TEXT_ADMIN_SENSOR_ON_OFF_2 " fue cambiado a "
 
+#define TEXT_ADMIN_FACTORY_RESET_SUCCESSFUL "Reset de fabrica exitoso!"
+
 #endif /* LANGUAGE_H */
