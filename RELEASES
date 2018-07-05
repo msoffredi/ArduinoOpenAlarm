@@ -2,6 +2,8 @@ Version 0.1.5 (candidate)
 =========================
 FEATURES
 * Added factory reset command
+BUGS
+* Fixed BUG allowing the alarm to arm even without sensors
 
 Version 0.1.4 (released)
 ========================
