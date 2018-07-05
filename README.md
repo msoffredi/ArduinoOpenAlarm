@@ -21,6 +21,7 @@ This project requires RCSwitch library and can be found here: [https://github.co
 - WiFi enabled for monitoring and remote control over Internet
 - Other languages supported
 - RTC module support
+- Support for sensors groups for easy switch between turning on/off sensors
 
 
 ## Potential features 
