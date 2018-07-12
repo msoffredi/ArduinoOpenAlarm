@@ -116,8 +116,7 @@ void Alarm::loop()
     
     if (millis()-this->armedTime > ALARM_ARM_GRACE_PERIOD_TIME)
     {
-        if (this->checkWiredSensorsActive() 
-                && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))
+        if (this->checkWiredSensorsActive())
         {
             ringBell = true;
         }
@@ -130,8 +129,7 @@ void Alarm::loop()
         }
         */ 
 
-        if (this->checkWirelessSensorsActive()
-                && (!this->delayedSensorActive || millis()-this->delayedSensorActiveTime > ALARM_DISARM_GRACE_PERIOD_TIME))
+        if (this->checkWirelessSensorsActive())
         {
             ringBell = true;
         }
@@ -186,14 +184,9 @@ bool Alarm::checkWirelessSensorsActive()
                     if (this->sensors[x].getSensorID() == ID 
                             || (this->delayedSensorActive && this->delayedSensorIndex == x+1))
                     {
-                        if (this->status == ALARM_STATUS_ARMED
-                                && !this->bell 
-                                && this->delayedSensorIndex == x+1 
-                                && !this->delayedSensorActive)
+                        if (!this->checkDelayedSensor(x))
                         {
-                            this->delayedSensorActive = true;
-                            this->delayedSensorActiveTime = millis();
-                            digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+                            continue;
                         }
                             
                         this->sensors[x].setActive(true);
@@ -205,7 +198,6 @@ bool Alarm::checkWirelessSensorsActive()
                             && this->sensors[x].getSensorInactiveID() == ID)
                     {
                         this->sensors[x].setActive(false);
-                        break;
                     }
                 }
             }
@@ -227,14 +219,9 @@ bool Alarm::checkWiredSensorsActive()
             if (digitalRead(this->sensors[x].getSensorPin()) 
                     || (this->delayedSensorActive && this->delayedSensorIndex == x+1))
             {
-                if (this->status == ALARM_STATUS_ARMED 
-                        && !this->bell 
-                        && this->delayedSensorIndex == x+1 
-                        && !this->delayedSensorActive)
+                if (!this->checkDelayedSensor(x))
                 {
-                    this->delayedSensorActive = true;
-                    this->delayedSensorActiveTime = millis();
-                    digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+                    continue;
                 }
                 
                 this->sensors[x].setActive(true);
@@ -250,6 +237,27 @@ bool Alarm::checkWiredSensorsActive()
     }
     
     return returnValue;
+}
+
+bool Alarm::checkDelayedSensor(uint8_t x)
+{
+    if (this->delayedSensorIndex == x+1 
+            && this->status == ALARM_STATUS_ARMED
+            && !this->bell) 
+    {
+        if (!this->delayedSensorActive)
+        {
+            this->delayedSensorActive = true;
+            this->delayedSensorActiveTime = millis();
+            digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+        }
+        else if (millis()-this->delayedSensorActiveTime < ALARM_DISARM_GRACE_PERIOD_TIME)
+        {
+            return false;
+        }
+    }
+    
+    return true;
 }
 
 uint8_t Alarm::getOperationMode()

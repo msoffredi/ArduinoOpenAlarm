@@ -43,6 +43,7 @@ private:
     void initSensors();
     void delayedArmBeeping();
     void delayedSensorBeepingOff();
+    bool checkDelayedSensor(uint8_t x);
     
 public:
     Alarm(EEPROMHandler* eeprom);
