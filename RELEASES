@@ -3,9 +3,10 @@ Version 0.1.5 (candidate)
 FEATURES
 * Added factory reset command
 BUGS
-* Fixed BUG allowing the alarm to arm even without sensors
+* Fixed BUG allowing the alarm to arm even without sensors (bug-82)
 * Fixed BUG making an alarm do the delayed sensor beeping even without a delayed
-sensor configured
+sensor configured (bug-81)
+* Fixed BUG not disabling delayed arming beeping on quick disarming (bug-80)
 
 Version 0.1.4 (released)
 ========================
