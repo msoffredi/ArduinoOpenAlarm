@@ -149,7 +149,7 @@ void Alarm::delayedArmBeeping()
 {
     unsigned long now = (unsigned long)(millis()/1000);
     
-    if (now%2 == 1 && !this->delayedArmBeep)
+    if (now%2 == 1 && !this->delayedArmBeep && this->status == ALARM_STATUS_ARMED)
     {
         OutputProcessor::beep(1, 0, 100);
         this->delayedArmBeep = true;
