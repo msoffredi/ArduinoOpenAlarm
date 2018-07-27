@@ -7,6 +7,7 @@ BUGS
 * Fixed BUG making an alarm do the delayed sensor beeping even without a delayed
 sensor configured (bug-81)
 * Fixed BUG not disabling delayed arming beeping on quick disarming (bug-80)
+* Fixed BUG activating bell (siren) immediately with delayed sensor configured
 
 Version 0.1.4 (released)
 ========================

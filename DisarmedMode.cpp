@@ -69,6 +69,12 @@ void DisarmedMode::factoryReset(AlarmCommand* commandObj)
 
 void DisarmedMode::loop()
 {
+    if (this->eeprom->getMessage() == MESSAGE_READ_USER_CODE)
+    {
+        EEPROM.get(EEPROM_USER_CODE, this->userCode);
+        this->eeprom->setMessage(MESSAGE_NONE);
+    }
+    
     AlarmCommand commandObj = this->commandPreprocessor->getNextCommand();
     
     if (commandObj.getCommand() != ALARM_COMMAND_NONE)
