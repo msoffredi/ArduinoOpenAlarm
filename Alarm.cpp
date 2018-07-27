@@ -241,15 +241,17 @@ bool Alarm::checkWiredSensorsActive()
 
 bool Alarm::checkDelayedSensor(uint8_t x)
 {
-    if (this->delayedSensorIndex == x+1 
-            && this->status == ALARM_STATUS_ARMED
-            && !this->bell) 
+    if (this->status == ALARM_STATUS_ARMED
+        && !this->bell) 
     {
-        if (!this->delayedSensorActive)
+        if (this->delayedSensorIndex == x+1 
+            && !this->delayedSensorActive)
         {
             this->delayedSensorActive = true;
             this->delayedSensorActiveTime = millis();
             digitalWrite(BEEPER_PIN, BEEPER_ACTIVE_PIN_SIGNAL);
+            
+            return false;
         }
         else if (millis()-this->delayedSensorActiveTime < ALARM_DISARM_GRACE_PERIOD_TIME)
         {

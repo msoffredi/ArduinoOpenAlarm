@@ -19,12 +19,6 @@ ArmedMode::ArmedMode(Alarm* alarm, CommandPreprocessor* commPP, OutputProcessor*
 
 void ArmedMode::loop()
 {
-    if (this->eeprom->getMessage() == MESSAGE_READ_USER_CODE)
-    {
-        EEPROM.get(EEPROM_USER_CODE, this->userCode);
-        this->eeprom->setMessage(MESSAGE_NONE);
-    }
-    
     if (this->alarm->getBell())
     {
         this->ringBell();
